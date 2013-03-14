@@ -11,11 +11,11 @@ public class ContentGame extends Content
 	{
 		super(page);
 		add(new ComponentCanvas("canvas", 10, 10));
-		add(new ComponentDiv("selection","infoBox"));
+		add(new ComponentDiv("selection","selBox"));
 		add(new ComponentDiv("words","infoBox"));
 		add(new ComponentJavascript(
 				"var search = new Wordsearch(document.getElementById('canvas'));"+
-				"search.initialize();"
+				"getWebsocket().addConnHandler( function() {search.initialize();} );"
 			));
 	}
 }

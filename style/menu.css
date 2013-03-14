@@ -1,0 +1,44 @@
+.menu
+{
+	margin:auto;
+	width: 1280px;
+	border:solid 1px #7ab6ff;
+	padding:0px;
+	height: 20px;
+}
+
+.menu > h1
+{
+	display: none;
+}
+
+.menu > ul
+{
+	list-style-type: none;
+	margin: 0px;
+}
+
+.menu > ul > li
+{
+	border:solid 1px #7ab6ff;
+	display: block;
+	color: #000000;
+	font-size: 14px;
+	text-align: left;
+	width: 80px;
+	height: 18px;
+	float: right;
+	margin-left: 10px;
+}
+.menu > ul > li > a
+{
+	color:#000;
+	text-decoration: none;
+	display: block;
+}
+
+a
+{
+	color:black;
+	text-decoration: underline;
+}

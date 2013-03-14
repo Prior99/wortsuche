@@ -26,8 +26,17 @@ public class PageHandlerWortsuche implements PageHandler
 		page.getBody().addJSFolderToInclude(new File("lib/"));
 		page.getBody().addJSFolderToInclude(new File("config.js"));
 		page.getBody().addCSSFolderToInclude(new File("style/"));
-		
-		page.addPage("game", "Game", ContentGame.class);
+
+		if(cookies.containsKey("username"))
+		{
+			page.addPage("game", "Game", ContentGame.class);
+			page.addPage("logout", "Logout", ContentLogout.class);
+		}
+		else
+		{
+			page.addPage("login", "Login", ContentLogin.class);
+			page.addPage("register", "Registrieren", ContentRegister.class);
+		}
 		
 		page.finalize();
 		

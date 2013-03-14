@@ -1,0 +1,26 @@
+canvas
+{
+	border: 1px solid black;
+	float:left;
+}
+
+.infoBox
+{
+	float:left;
+	border: 1px solid black;
+	width: 180px;
+	font-size: 12px;
+	height: 582px;
+	overflow: scroll;
+	overflow-x: hidden;
+	font-family: Arial;
+}
+
+.selBox
+{
+	float:left;
+	width: 180px;
+	border: 1px solid black;
+	font-size: 12px;
+	height: 14px;
+}

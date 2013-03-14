@@ -1,0 +1,11 @@
+.inputWrong
+{
+	background-color: lightcoral;
+	color: red;
+}
+
+.inputOkay
+{
+	background-color: lightgreen;
+	color:green;
+}
