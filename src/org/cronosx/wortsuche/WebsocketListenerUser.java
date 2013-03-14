@@ -3,6 +3,7 @@ package org.cronosx.wortsuche;
 import org.cronosx.websockets.WebSocket;
 import org.cronosx.websockets.WebSocketListener;
 import org.cronosx.wortsuche.game.Game;
+import org.cronosx.wortsuche.game.Game.Selection;
 
 public class WebsocketListenerUser implements WebSocketListener
 {
@@ -65,22 +66,7 @@ public class WebsocketListenerUser implements WebSocketListener
 		{
 			case "getGame":
 			{
-				Game game = user.getServer().getGame();
-				String gameString = "";
-				for(int i = 0; i < game.getWidth(); i++)
-				{
-					for(int j = 0; j < game.getHeight(); j++)
-					{
-						gameString += game.getArray()[i][j];
-					}	
-				}
-				origin.send("game:"+game.getWidth()+";"+game.getHeight()+";"+gameString);
-				String words = "";
-				for(String word:game.getWords())
-				{
-					words += word+",";
-				}
-				origin.send("words:"+words.substring(0,words.length()-1));
+				sendGame();
 				break;
 			}
 			case "remove":
@@ -97,6 +83,31 @@ public class WebsocketListenerUser implements WebSocketListener
 				break;
 			}
 		}
+	}
+	
+	public void sendGame()
+	{
+		Game game = user.getServer().getGame();
+		String gameString = "";
+		for(int i = 0; i < game.getWidth(); i++)
+		{
+			for(int j = 0; j < game.getHeight(); j++)
+			{
+				gameString += game.getArray()[i][j];
+			}	
+		}
+		origin.send("game:"+game.getWidth()+";"+game.getHeight()+";"+gameString);
+		String words = "";
+		for(String word:game.getWords())
+		{
+			words += word+",";
+		}
+		origin.send("words:"+words.substring(0,words.length()-1)+";"+game.getOriginalWordCount());
+		for(Selection sel:game.getSelections())
+		{
+			origin.send("select:"+sel.x1+";"+sel.y1+";"+sel.x2+";"+sel.y2+";"+sel.color);
+		}
+		origin.send("color:"+user.getColorOpaque());
 	}
 	
 	public WebSocket getOrigin()

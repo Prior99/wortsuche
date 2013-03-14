@@ -1,26 +1,62 @@
 canvas
 {
+	position: relative;
 	border: 1px solid black;
-	float:left;
+	float: left;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	z-index: 0;
 }
 
 .infoBox
 {
-	float:left;
 	border: 1px solid black;
-	width: 180px;
+	width: 40px;
 	font-size: 12px;
-	height: 582px;
+	height: 500px;
+	margin-top: 3px;
 	overflow: scroll;
 	overflow-x: hidden;
-	font-family: Arial;
+	float:left;
+	width: 145px;
+	margin-left: 3px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+}
+.infoBoxSmall
+{
+	border: 1px solid black;
+	width: 40px;
+	font-size: 16px;
+	margin-top: 3px;
+	overflow-x: hidden;
+	float:left;
+	width: 145px;
+	margin-left: 3px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
 }
 
 .selBox
 {
-	float:left;
-	width: 180px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	width: 145px;
+	margin-left: 3px;
 	border: 1px solid black;
-	font-size: 12px;
-	height: 14px;
+	font-size: 14px;
+	height: 16px;
+	float:left;
+	padding-left: 2px;
+	overflow: hidden;
+
+}
+
+.clear
+{
+	clear: both;
 }

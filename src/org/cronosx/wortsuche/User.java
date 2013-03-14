@@ -11,13 +11,9 @@ public class User
 	private String username;
 	private int score;
 	private ServerWortsuche server;
-	
-	public User(String username, int score, ServerWortsuche server)
-	{
-		this.server = server;
-		this.username = username;
-		this.score = score;
-	}
+	private int r;
+	private int g;
+	private int b;
 	
 	public void incScore()
 	{
@@ -68,21 +64,35 @@ public class User
 	
 	public void importFromDB() throws SQLException
 	{
-		PreparedStatement stmt = server.getDatabaseConnection().getPreparedStatement("SELECT Score FROM Users WHERE Username = ?");
+		PreparedStatement stmt = server.getDatabaseConnection().getPreparedStatement("SELECT Score, R, G, B FROM Users WHERE Username = ?");
 		stmt.setString(1, username);
 		stmt.execute();
 		ResultSet rs = stmt.getResultSet();
 		if(rs.next())
 		{
 			this.score = rs.getInt("Score");
+			this.r = rs.getInt("R");
+			this.g = rs.getInt("G");
+			this.b = rs.getInt("B");
 		}
 	}
 	
 	public void exportToDB() throws SQLException
 	{
+		server.getLog().log("Exporting user "+username+" to database",50);
 		PreparedStatement stmt = server.getDatabaseConnection().getPreparedStatement("UPDATE Users SET Score = ? WHERE Username = ?");
 		stmt.setInt(1, score);
 		stmt.setString(2, username);
 		stmt.executeUpdate();
+	}
+	
+	public String getColor()
+	{
+		return "rgba("+r+","+g+","+b+",1)";
+	}
+	
+	public String getColorOpaque()
+	{
+		return "rgba("+r+","+g+","+b+",0.18)";
 	}
 }

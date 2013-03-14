@@ -14,13 +14,18 @@ public class Game
 	private ServerWortsuche server;
 	private char[][] array;
 	private ArrayList<String> allWords;
+	private ArrayList<Selection> selections;
 	private ArrayList<User> users;
-	int width = 75;
-	int height = 40;
-	int maxWordLen;
+	private int width = 75;
+	private int height = 40;
+	private int maxWordLen;
+	private int origWordCount = 0;
+	private int dictSize = 0;
+	private int games = 0;
 	
 	public Game(ServerWortsuche server)
 	{
+		selections = new ArrayList<Selection>();
 		allWords = new ArrayList<String>();
 		this.server = server;
 		generateGame();
@@ -32,8 +37,14 @@ public class Game
 		return allWords;
 	}
 	
+	public int getGamesGenerated()
+	{
+		return games;
+	}
+	
 	public void generateGame()
 	{
+		games++;
 		int allWords = 0;
 		int wordsFailed = 0;
 		array = new char[width][height];
@@ -95,6 +106,7 @@ public class Game
 					else  wordsFailed++;
 				}
 			}
+			origWordCount = this.allWords.size();
 		}
 		server.getLog().log(wordsFailed+"/"+allWords);
 		/*** Array füllen ***/
@@ -109,13 +121,30 @@ public class Game
 		}
 	}
 	
+	public int getDictonarySize()
+	{
+		return dictSize;
+	}
+	
+	public int getOriginalWordCount()
+	{
+		return this.origWordCount;
+	}
+	
 	public void removeWord(String word, int x1, int y1, int x2, int y2, User u)
 	{
 		if(word.equals(getSelection(x1, y1, x2, y2)) && allWords.contains(word))
 		{
 			u.incScore();
-			broadcast("remove:"+word+";"+x1+";"+y1+";"+x2+";"+y2);
+			broadcast("remove:"+word+";"+x1+";"+y1+";"+x2+";"+y2+";"+u.getColorOpaque());
 			this.allWords.remove(word);
+			this.selections.add(new Selection(x1, y1, x2, y2, u.getColorOpaque()));
+			if(this.allWords.isEmpty())
+			{
+				generateGame();
+				for(User user : users) user.getListener().sendGame();
+			}
+			u.getListener().getOrigin().send("score:"+u.getScore());
 		}
 	}
 	
@@ -132,7 +161,7 @@ public class Game
 	{
 		String string = "";
 		if(x1 >= 0 && y1 >= 0 && x1 < this.width && y1 < this.height &&
-				   x2 >= 0 && y2 >= 0 && x2 < this.width && y2 < this.height)
+		   x2 >= 0 && y2 >= 0 && x2 < this.width && y2 < this.height)
 		{
 			int xdir = getDir(x1, x2);
 			int ydir = getDir(y1, y2);
@@ -166,6 +195,7 @@ public class Game
 				if(s.length() > this.maxWordLen) this.maxWordLen = s.length();
 				if(!dict.containsKey(s.length())) dict.put(s.length(), new ArrayList<String>());
 				dict.get(s.length()).add(s);
+				this.dictSize++;
 			}
 			sc.close();
 		}
@@ -259,5 +289,27 @@ public class Game
 	public char[][] getArray()
 	{
 		return array;
+	}
+	
+	public class Selection
+	{
+		public int x1;
+		public int x2;
+		public int y1;
+		public int y2;
+		public String color;
+		public Selection(int x1, int y1, int x2, int y2, String color)
+		{
+			this.x1 = x1;
+			this.y1 = y1;
+			this.x2 = x2;
+			this.y2 = y2;
+			this.color = color;
+		}
+	}
+	
+	public ArrayList<Selection> getSelections()
+	{
+		return selections;
 	}
 }

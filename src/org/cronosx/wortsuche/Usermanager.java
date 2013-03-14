@@ -16,6 +16,11 @@ public class Usermanager
 		this.server = server;
 	}
 	
+	public int getUsers()
+	{
+		return users.size();
+	}
+	
 	public User getUser(String username)
 	{
 		User user = getLoadedUser(username); 
@@ -56,9 +61,12 @@ public class Usermanager
 	{
 		try
 		{
-			PreparedStatement stmt = server.getDatabaseConnection().getPreparedStatement("INSERT INTO Users(Username, Password, Score) VALUES (?, ?, 0)");
+			PreparedStatement stmt = server.getDatabaseConnection().getPreparedStatement("INSERT INTO Users(Username, Password, Score, R, G, B) VALUES (?, ?, 0, ?, ?, ?)");
 			stmt.setString(1, username);
 			stmt.setString(2, server.getSHA1(password));
+			stmt.setInt(3, (int)(Math.random()*200) + 55);
+			stmt.setInt(4, (int)(Math.random()*200) + 55);
+			stmt.setInt(5, (int)(Math.random()*200) + 55);
 			stmt.executeUpdate();
 		}
 		catch(SQLException e)

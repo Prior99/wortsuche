@@ -1,7 +1,5 @@
 package org.cronosx.wortsuche;
 
-import java.sql.SQLException;
-
 import org.cronosx.server.DefaultWebSocketListener;
 import org.cronosx.websockets.WebSocket;
 
@@ -63,16 +61,13 @@ public class WebsocketListenerWortsuche extends DefaultWebSocketListener
 			{
 				if(param.length == 2)
 					if(!server.getUserManager().isUsernameAvailable(param[0]))
-						if(server.getUserManager().isLoginCorrect(param[0], param[1])) 
-							try
-							{
-								origin.setWebSocketListener(new WebsocketListenerUser(new User(param[0], server)));
-								origin.send("success:Erfolgreich eingeloggt");
-							}
-							catch(SQLException e)
-							{
-								e.printStackTrace();
-							}
+						if(server.getUserManager().isLoginCorrect(param[0], param[1]))
+						{
+							User u = server.getUserManager().getUser(param[0]);
+							origin.setWebSocketListener(new WebsocketListenerUser(u));
+							origin.send("success:Erfolgreich eingeloggt");
+							origin.send("score:"+u.getScore());
+						}
 						else origin.send("error:Das Passwort ist falsch");
 					else origin.send("error:Diesen Benutzernamen gibt es nicht");
 				else origin.send("error:Internal Error: Wrong number of arguments supplied");

@@ -10,6 +10,7 @@ public class ContentLogin extends Content
 	public ContentLogin(Page page)
 	{
 		super(page);
+		add(new ComponentHeadline("Login", 1));
 		// TODO Auto-generated constructor stub
 		ComponentFormJavascript form = new ComponentFormJavascript();
 		form.addEntry("Benutzername", new ComponentInputText("username"));

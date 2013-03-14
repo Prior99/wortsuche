@@ -2,9 +2,13 @@
 {
 	margin:auto;
 	width: 1280px;
-	border:solid 1px #7ab6ff;
+	border:solid 1px black;
 	padding:0px;
 	height: 20px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	background-color: white;
 }
 
 .menu > h1
@@ -20,7 +24,7 @@
 
 .menu > ul > li
 {
-	border:solid 1px #7ab6ff;
+	border-left: solid 1px black;
 	display: block;
 	color: #000000;
 	font-size: 14px;
@@ -29,10 +33,20 @@
 	height: 18px;
 	float: right;
 	margin-left: 10px;
+	margin-top: 1px;
+	padding-left: 3px;
 }
+
 .menu > ul > li > a
 {
 	color:#000;
+	text-decoration: none;
+	display: block;
+}
+
+.menu > ul > li > a:hover
+{
+	color:orange;
 	text-decoration: none;
 	display: block;
 }
@@ -41,4 +55,18 @@ a
 {
 	color:black;
 	text-decoration: underline;
+}
+
+.userinfo
+{
+	border-right: solid 1px black;
+	display: block;
+	color: #000000;
+	font-size: 14px;
+	text-align: left;
+	height: 18px;
+	float: left;
+	margin-left: 10px;
+	margin-top: 1px;
+	padding-right: 10px;
 }

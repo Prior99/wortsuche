@@ -74,7 +74,10 @@ public class ServerWortsuche extends Server
 							"ID 		INT			NOT NULL AUTO_INCREMENT PRIMARY KEY," +
 							"Username	VARCHAR(16)," +
 							"Password	VARCHAR(40)," +
-							"Score		INT)");
+							"Score		INT,"+
+							"R			INT,"+
+							"G			INT,"+
+							"B			INT)");
 		}
 		catch(SQLException e)
 		{
