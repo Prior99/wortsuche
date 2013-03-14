@@ -144,7 +144,8 @@ public class Game
 				generateGame();
 				for(User user : users) user.getListener().sendGame();
 			}
-			u.getListener().getOrigin().send("score:"+u.getScore());
+			if(u != null && u.getListener() != null && u.getListener().getOrigin() != null)
+				u.getListener().getOrigin().send("score:"+u.getScore());
 		}
 	}
 	
@@ -152,7 +153,7 @@ public class Game
 	{
 		for(User u:users)
 		{
-			if(u.getListener().getOrigin() != null)
+			if(u != null && u.getListener() != null && u.getListener().getOrigin() != null)
 				u.getListener().getOrigin().send(s);
 		}
 	}

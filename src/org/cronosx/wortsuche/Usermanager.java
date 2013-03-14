@@ -8,8 +8,9 @@ import java.sql.PreparedStatement;
 
 public class Usermanager
 {
-	private ServerWortsuche server;
-	private ArrayList<User> users;
+	private ServerWortsuche	server;
+	private ArrayList<User>	users;
+	
 	public Usermanager(ServerWortsuche server)
 	{
 		users = new ArrayList<User>();
@@ -23,7 +24,7 @@ public class Usermanager
 	
 	public User getUser(String username)
 	{
-		User user = getLoadedUser(username); 
+		User user = getLoadedUser(username);
 		if(user == null)
 		{
 			try
@@ -44,7 +45,9 @@ public class Usermanager
 	{
 		try
 		{
-			PreparedStatement stmt = server.getDatabaseConnection().getPreparedStatement("SELECT ID FROM Users WHERE Username = ?");
+			PreparedStatement stmt = server.getDatabaseConnection()
+					.getPreparedStatement(
+							"SELECT ID FROM Users WHERE Username = ?");
 			stmt.setString(1, username);
 			stmt.execute();
 			ResultSet rs = stmt.getResultSet();
@@ -61,12 +64,15 @@ public class Usermanager
 	{
 		try
 		{
-			PreparedStatement stmt = server.getDatabaseConnection().getPreparedStatement("INSERT INTO Users(Username, Password, Score, R, G, B) VALUES (?, ?, 0, ?, ?, ?)");
+			PreparedStatement stmt = server
+					.getDatabaseConnection()
+					.getPreparedStatement(
+							"INSERT INTO Users(Username, Password, Score, R, G, B) VALUES (?, ?, 0, ?, ?, ?)");
 			stmt.setString(1, username);
 			stmt.setString(2, server.getSHA1(password));
-			stmt.setInt(3, (int)(Math.random()*200) + 55);
-			stmt.setInt(4, (int)(Math.random()*200) + 55);
-			stmt.setInt(5, (int)(Math.random()*200) + 55);
+			stmt.setInt(3, (int) (Math.random() * 200) + 55);
+			stmt.setInt(4, (int) (Math.random() * 200) + 55);
+			stmt.setInt(5, (int) (Math.random() * 200) + 55);
 			stmt.executeUpdate();
 		}
 		catch(SQLException e)
@@ -79,7 +85,10 @@ public class Usermanager
 	{
 		try
 		{
-			PreparedStatement stmt = server.getDatabaseConnection().getPreparedStatement("SELECT ID FROM Users WHERE Username = ? AND Password = ?");
+			PreparedStatement stmt = server
+					.getDatabaseConnection()
+					.getPreparedStatement(
+							"SELECT ID FROM Users WHERE Username = ? AND Password = ?");
 			stmt.setString(1, username);
 			stmt.setString(2, server.getSHA1(password));
 			stmt.execute();
@@ -95,7 +104,7 @@ public class Usermanager
 	
 	private User getLoadedUser(String username)
 	{
-		for(User user:users)
+		for(User user : users)
 		{
 			if(user.getUsername().equals(username)) return user;
 		}
@@ -109,7 +118,7 @@ public class Usermanager
 	
 	public void save() throws SQLException
 	{
-		for(User user:users)
+		for(User user : users)
 		{
 			user.exportToDB();
 		}

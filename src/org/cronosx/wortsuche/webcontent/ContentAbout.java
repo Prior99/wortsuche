@@ -17,7 +17,7 @@ public class ContentAbout extends Content
 			"Ziel des Spieles ist es, im dem Buchstabensalat alle angegebenen Wörter zu finden und zu markieren.\n" +
 			"In Dieser Version des Spiels spielen alle miteinander an einem Rätsel. Je mehr Wörter man findet, desto höher " +
 			"steigt man in der Highscore.\n" +
-			"Zum Spielen ist nur ein moderner Browser (Firefox, Chrome, ...) von Nöten. Wer kein Fan von technischen Details oder" +
+			"Zum Spielen ist nur ein moderner Browser (Firefox, Chrome, ...) von Nöten. Wer kein Fan von technischen Details oder " +
 			"einführenden Worten ist, sollte sich einfach <a style='color: red; font-weight: bold;' href='register'>hier</a> registrieren und gleich loslegen.\n" +
 			"\n" +
 			"wsWS ist auf der Browserseite komplett in HTML5 und Javascript geschrieben, für die Kommunikation zwischen Browser und " +
