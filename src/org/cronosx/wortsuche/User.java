@@ -15,9 +15,9 @@ public class User
 	private int g;
 	private int b;
 	
-	public void incScore()
+	public void incScore(int i)
 	{
-		score++;
+		score+=i;
 	}
 	
 	public int getR()

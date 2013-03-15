@@ -146,7 +146,8 @@ public class Game
 	{
 		if(word.equals(getSelection(x1, y1, x2, y2)) && allWords.contains(word))
 		{
-			u.incScore();
+			int inc = (int)(25*(this.origWordCount - this.allWords.size())/(float)(this.origWordCount) + 1);
+			u.incScore(inc);
 			broadcast("remove:"+word+";"+x1+";"+y1+";"+x2+";"+y2+";"+u.getColorOpaque());
 			this.allWords.remove(word);
 			this.selections.add(new Selection(x1, y1, x2, y2, u.getColorOpaque()));
@@ -156,7 +157,10 @@ public class Game
 				for(User user : users) user.getListener().sendGame();
 			}
 			if(u != null && u.getListener() != null && u.getListener().getOrigin() != null)
+			{
 				u.getListener().getOrigin().send("score:"+u.getScore());
+				u.getListener().getOrigin().send("scoreinc:"+inc);
+			}
 		}
 	}
 	
