@@ -64,6 +64,20 @@ public class WebsocketListenerUser implements WebSocketListener
 		else if(s.length() >= 1)command = s.substring(0, s.length() -1);
 		switch(command)
 		{
+			case "requestColor":
+			{
+				origin.send("color:"+user.getR()+";"+user.getG()+";"+user.getB());
+				break;
+			}
+			case "color":
+			{
+				if(param.length == 3)
+				{
+					user.setColor(Integer.parseInt(param[0]), Integer.parseInt(param[1]), Integer.parseInt(param[2]));
+					origin.send("color:"+user.getR()+";"+user.getG()+";"+user.getB());
+				}
+				break;
+			}
 			case "getGame":
 			{
 				sendGame();

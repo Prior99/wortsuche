@@ -30,8 +30,9 @@ public class PageHandlerWortsuche implements PageHandler
 		page.getMenu().addSubComponent(new ComponentDiv("userinfo", "userinfo"));
 		if(cookies.containsKey("username"))
 		{
-			page.addPage("game", "Game", ContentGame.class);
+			page.addPage("game", "Spielen", ContentGame.class);
 			page.addPage("logout", "Logout", ContentLogout.class);
+			page.addPage("settings", "Einstellungen", ContentSettings.class);
 		}
 		else
 		{

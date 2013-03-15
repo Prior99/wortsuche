@@ -20,6 +20,28 @@ public class User
 		score++;
 	}
 	
+	public int getR()
+	{
+		return r;
+	}
+	
+	public int getG()
+	{
+		return g;
+	}
+	
+	public int getB()
+	{
+		return b;
+	}
+	
+	public void setColor(int r, int g, int b)
+	{
+		this.r = r;
+		this.g = g;
+		this.b = b;
+	}
+	
 	public User(String username, ServerWortsuche server) throws SQLException
 	{
 		this.username = username;
@@ -80,9 +102,12 @@ public class User
 	public void exportToDB() throws SQLException
 	{
 		server.getLog().log("Exporting user "+username+" to database",50);
-		PreparedStatement stmt = server.getDatabaseConnection().getPreparedStatement("UPDATE Users SET Score = ? WHERE Username = ?");
+		PreparedStatement stmt = server.getDatabaseConnection().getPreparedStatement("UPDATE Users SET Score = ?, R = ?, G = ?, B = ? WHERE Username = ?");
 		stmt.setInt(1, score);
-		stmt.setString(2, username);
+		stmt.setInt(2, r);
+		stmt.setInt(3, g);
+		stmt.setInt(4, b);
+		stmt.setString(5, username);
 		stmt.executeUpdate();
 	}
 	
@@ -93,6 +118,6 @@ public class User
 	
 	public String getColorOpaque()
 	{
-		return "rgba("+r+","+g+","+b+",0.18)";
+		return "rgba("+r+","+g+","+b+",0.075)";
 	}
 }

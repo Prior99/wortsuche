@@ -44,6 +44,7 @@ public class Game
 	
 	public void generateGame()
 	{
+		server.getLog().log("Generating new game...");
 		games++;
 		int allWords = 0;
 		int wordsFailed = 0;
@@ -60,6 +61,8 @@ public class Game
 			/*** Absteigend der grösse nach wörter auswählen ***/
 			Possibility bestPos = null;
 			ArrayList<String> words = wwords.get(i); //Alle W�rter dieser L�nge
+			int index = 0;
+			int lastProgress=-1;
 			if(words != null)
 			for(int j = 0; j < words.size(); j++) //Alle W�rter durchlaufen
 			{	
@@ -68,6 +71,13 @@ public class Game
 				String word = words.get(j); //Aktuelles Wort
 				int sx = (int) (Math.random()*width);
 				int sy = (int) (Math.random()*height);
+				int progress = (int)((index/(float)dictSize)*100);
+				if(progress%2 == 0 && progress != lastProgress)
+				{
+					System.out.print("\rProgress: "+progress+"%\r");
+					lastProgress = progress;
+				}
+				index++;
 				for(int x = 0; x < width; x++)
 				{
 					for(int y = 0; y < height; y++)
