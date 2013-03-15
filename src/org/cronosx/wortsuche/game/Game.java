@@ -60,6 +60,7 @@ public class Game
 			/*** Absteigend der grösse nach wörter auswählen ***/
 			Possibility bestPos = null;
 			ArrayList<String> words = wwords.get(i); //Alle W�rter dieser L�nge
+			if(words != null)
 			for(int j = 0; j < words.size(); j++) //Alle W�rter durchlaufen
 			{	
 				bestPos = null;

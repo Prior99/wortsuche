@@ -69,6 +69,14 @@ public class WebsocketListenerUser implements WebSocketListener
 				sendGame();
 				break;
 			}
+			case "getGameMeta":
+			{
+				for(Selection sel:user.getServer().getGame().getSelections())
+				{
+					origin.send("select:"+sel.x1+";"+sel.y1+";"+sel.x2+";"+sel.y2+";"+sel.color);
+				}
+				break;
+			}
 			case "remove":
 			{
 				if(param.length == 5)
@@ -103,11 +111,8 @@ public class WebsocketListenerUser implements WebSocketListener
 			words += word+",";
 		}
 		origin.send("words:"+words.substring(0,words.length()-1)+";"+game.getOriginalWordCount());
-		for(Selection sel:game.getSelections())
-		{
-			origin.send("select:"+sel.x1+";"+sel.y1+";"+sel.x2+";"+sel.y2+";"+sel.color);
-		}
 		origin.send("color:"+user.getColorOpaque());
+		origin.send("ready");
 	}
 	
 	public WebSocket getOrigin()

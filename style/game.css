@@ -7,6 +7,12 @@ canvas
 	-moz-border-radius: 10px;
 	border-radius: 10px;
 	z-index: 0;
+	display: none;
+}
+
+.wrapper
+{
+	position: relative;
 }
 
 .infoBox
@@ -24,7 +30,9 @@ canvas
 	-webkit-border-radius: 10px;
 	-moz-border-radius: 10px;
 	border-radius: 10px;
+	display: none;
 }
+
 .infoBoxSmall
 {
 	border: 1px solid black;
@@ -38,6 +46,7 @@ canvas
 	-webkit-border-radius: 10px;
 	-moz-border-radius: 10px;
 	border-radius: 10px;
+	display: none;
 }
 
 .selBox
@@ -53,10 +62,31 @@ canvas
 	float:left;
 	padding-left: 2px;
 	overflow: hidden;
-
+	display: none;
 }
 
 .clear
 {
 	clear: both;
+	display: none;
+}
+
+.loading
+{
+	width: 100%;
+	text-align: center;
+}
+
+.loading > .status
+{
+	color: darkgrey;
+}
+
+.infoPopup
+{
+	color: lime;
+	font-weight: bold
+	font-size: 20px;
+	z-index: 1000;
+	position: absolute;
 }
