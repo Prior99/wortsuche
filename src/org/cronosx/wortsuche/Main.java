@@ -1,25 +1,30 @@
 package org.cronosx.wortsuche;
 
+import java.util.Scanner;
+
 public class Main
 {
 	public static void main(String[] args)
 	{
 		final ServerWortsuche server = new ServerWortsuche();
 		server.start();
-		Thread t = new Thread()
+		final Thread t = new Thread()
 		{
 			public void run()
 			{
-				try
+				while(!isInterrupted())
 				{
-					Thread.sleep(server.getConfig().getInt("Export-Timeout", 3600)*1000);
+					try
+					{
+						Thread.sleep(server.getConfig().getInt("Export-Timeout", 3600)*1000);
+					}
+					catch(InterruptedException e)
+					{
+						e.printStackTrace();
+					}
+					server.getLog().log("Starting scheduled export to database",50);
+					server.save();	
 				}
-				catch(InterruptedException e)
-				{
-					e.printStackTrace();
-				}
-				server.getLog().log("Starting scheduled export to database",50);
-				server.save();
 			}
 		};
 		t.start();
@@ -31,5 +36,57 @@ public class Main
 				server.shutDown();
 			}
 		});
+		final Thread t2 = new Thread()
+		{
+			public void run()
+			{
+				Scanner sc = new Scanner(System.in);
+				while(!isInterrupted())
+				{
+					while(!sc.hasNextLine())
+					{
+						try
+						{
+							Thread.sleep(200);
+						}
+						catch(InterruptedException e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					String s = sc.nextLine();
+					String[] args = s.split(" ");
+					server.getLog().log("Running command \""+s+"\"");
+					switch(args[0])
+					{
+						case "exit":
+						{
+							server.shutDown();
+							t.interrupt();
+							interrupt();
+							break;
+						}
+						case "save":
+						{
+							server.save();
+							break;
+						}
+						case "regenerate":
+						{
+							server.getGame().generateGame();
+							break;
+						}
+						case "help":
+						{
+							System.out.println("Known commands are: exit, save, regenerate, help");
+							break;
+						}
+					}
+				}
+				sc.close();
+			}
+		};
+		t2.start();
 	}
 }

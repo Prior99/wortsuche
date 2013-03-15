@@ -33,6 +33,7 @@ public class ServerWortsuche extends Server
 	{
 		try
 		{
+			game.saveToDisk();
 			users.save();
 		}
 		catch(SQLException e)

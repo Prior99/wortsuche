@@ -1,7 +1,12 @@
 package org.cronosx.wortsuche.game;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -22,12 +27,94 @@ public class Game
 	private int origWordCount = 0;
 	private int dictSize = 0;
 	private int games = 0;
+
+	
+	public void saveToDisk()
+	{
+		server.getLog().log("Saving game...");
+		try
+		{
+			File f = new File("game.sav");
+			if(f.exists()) f.delete();
+			DataOutputStream stream = new DataOutputStream(new FileOutputStream(f));
+			stream.writeInt(width);
+			stream.writeInt(height);
+			stream.writeInt(maxWordLen);
+			stream.writeInt(origWordCount);
+			stream.writeInt(dictSize);
+			stream.writeInt(games);
+			for(int x = 0; x < width; x++)
+				for(int y = 0; y < height; y++)
+					stream.writeChar(array[x][y]);
+			stream.writeInt(allWords.size());
+			stream.writeInt(selections.size());
+			for(int i = 0; i < allWords.size();i++) stream.writeUTF(allWords.get(i));
+			for(int i = 0; i < selections.size();i++) 
+			{
+				stream.writeInt(selections.get(i).x1);
+				stream.writeInt(selections.get(i).y1);
+				stream.writeInt(selections.get(i).x2);
+				stream.writeInt(selections.get(i).y2);
+				stream.writeUTF(selections.get(i).color);
+			}
+			stream.close();
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		} 
+	}
+	
+	public boolean loadFromDisk()
+	{
+		File f = new File("game.sav");
+		if(f.exists())
+		{
+			DataInputStream stream;
+			try
+			{
+				server.getLog().log("Importing game...");
+				stream = new DataInputStream(new FileInputStream(f));
+				width = stream.readInt();
+				height = stream.readInt();
+				maxWordLen = stream.readInt();
+				origWordCount = stream.readInt();
+				dictSize = stream.readInt();
+				games = stream.readInt();
+				array = new char[width][height];
+				for(int x = 0; x < width; x++)
+					for(int y = 0; y < height; y++)
+						array[x][y] = stream.readChar();
+				allWords = new ArrayList<String>();
+				int l = stream.readInt();
+				int l2 = stream.readInt();
+				for(int i = 0; i < l; i++)
+					allWords.add(stream.readUTF());
+				selections = new ArrayList<Selection>();
+				for(int i = 0; i < l2; i++)
+				{
+					selections.add(new Selection(stream.readInt(), stream.readInt(), stream.readInt(), stream.readInt(), stream.readUTF()));
+				}
+				stream.close();
+				f.delete();
+			}
+			catch(IOException e)
+			{
+				e.printStackTrace();
+				return false;
+			}
+			
+			return true;
+		}
+		else return false;
+	}
 	
 	public Game(ServerWortsuche server)
 	{
 		selections = new ArrayList<Selection>();
 		allWords = new ArrayList<String>();
 		this.server = server;
+		if(!this.loadFromDisk()) 
 		generateGame();
 		users = new ArrayList<User>();
 	}
@@ -130,6 +217,10 @@ public class Game
 					this.array[i][j] = chars.charAt((int)(Math.random()*chars.length()));
 				}
 		}
+		if(users != null)
+		for(User u:users)
+			if(u != null && u.getListener() != null && u.getListener().getOrigin() != null)
+				u.getListener().sendGame();
 	}
 	
 	public int getDictonarySize()

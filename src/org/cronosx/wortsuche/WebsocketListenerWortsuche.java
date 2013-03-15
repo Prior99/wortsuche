@@ -64,7 +64,9 @@ public class WebsocketListenerWortsuche extends DefaultWebSocketListener
 						if(server.getUserManager().isLoginCorrect(param[0], param[1]))
 						{
 							User u = server.getUserManager().getUser(param[0]);
-							origin.setWebSocketListener(new WebsocketListenerUser(u));
+							WebsocketListenerUser ul = new WebsocketListenerUser(u);
+							ul.onOpen(origin);
+							origin.setWebSocketListener(ul);
 							origin.send("success:Erfolgreich eingeloggt");
 							origin.send("score:"+u.getScore());
 						}

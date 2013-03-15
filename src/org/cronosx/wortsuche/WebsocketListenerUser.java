@@ -29,7 +29,7 @@ public class WebsocketListenerUser implements WebSocketListener
 	@Override
 	public void onOpen(WebSocket origin)
 	{
-		
+		this.origin = origin;
 	}
 
 	@Override

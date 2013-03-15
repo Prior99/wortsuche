@@ -116,6 +116,11 @@ public class Usermanager
 		users.add(user);
 	}
 	
+	public void removeCachedUser(User user)
+	{
+		users.remove(user);
+	}
+	
 	public void save() throws SQLException
 	{
 		for(User user : users)

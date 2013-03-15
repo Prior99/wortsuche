@@ -61,6 +61,15 @@ public class User
 	
 	public void closeWebsocket()
 	{
+		try
+		{
+			this.exportToDB();
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+		server.getUserManager().removeCachedUser(this);
 		this.websocket = null;
 	}
 	
