@@ -23,7 +23,7 @@ public class Game
 	private ArrayList<Selection> selections;
 	private ArrayList<User> users;
 	private int width = 75;
-	private int height = 60;
+	private int height = 50;
 	private int maxWordLen;
 	private int origWordCount = 0;
 	private int dictSize = 0;
@@ -326,16 +326,23 @@ public class Game
 			if(u != null && u.getListener() != null && u.getListener().getOrigin() != null)
 				u.getListener().sendUsers();
 		}
+		chat(user.getUsername()+" hat das Spiel betreten", "Server", "black");
 	}
 	
 	public void leave(User user)
 	{
 		users.remove(user);
+		chat(user.getUsername()+" hat das Spiel verlassen", "Server", "black");
 		for(User u: users)
 		{
 			if(u != null && u.getListener() != null && u.getListener().getOrigin() != null)
 				u.getListener().sendUsers();
 		}
+	}
+	
+	public void chat(String msg, String user, String userColor)
+	{
+		broadcast("chat:"+user+";"+userColor+";"+msg);
 	}
 	
 	public int getWidth()
@@ -444,6 +451,23 @@ public class Game
 				}
 				stream.close();
 				f.delete();
+				started = (int) (System.currentTimeMillis()/1000);
+				timer = new Thread()
+				{
+					public void run()
+					{
+						try
+						{
+							Thread.sleep(1000 * getRuntime());
+						}
+						catch (InterruptedException e)
+						{
+							e.printStackTrace();
+						}
+						game.generateGame();
+					}
+				};
+				timer.start();
 			}
 			catch(IOException e)
 			{

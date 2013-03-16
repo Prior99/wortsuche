@@ -71,7 +71,7 @@ public class WebsocketListenerUser implements WebSocketListener
 			}
 			case "color":
 			{
-				if(param.length == 3)
+				if(param != null && param.length == 3)
 				{
 					user.setColor(Integer.parseInt(param[0]), Integer.parseInt(param[1]), Integer.parseInt(param[2]));
 					origin.send("color:"+user.getR()+";"+user.getG()+";"+user.getB());
@@ -94,7 +94,7 @@ public class WebsocketListenerUser implements WebSocketListener
 			}
 			case "remove":
 			{
-				if(param.length == 5)
+				if(param != null && param.length == 5)
 				{
 					String word = param[0];
 					int x1 = Integer.parseInt(param[1]);
@@ -102,6 +102,14 @@ public class WebsocketListenerUser implements WebSocketListener
 					int x2 = Integer.parseInt(param[3]);
 					int y2 = Integer.parseInt(param[4]);
 					user.getServer().getGame().removeWord(word, x1, y1, x2, y2, user);
+				}
+				break;
+			}
+			case "chat":
+			{
+				if(param != null && param.length == 1)
+				{
+					user.getServer().getGame().chat(param[0], user.getUsername(), user.getColor());
 				}
 				break;
 			}
@@ -134,7 +142,7 @@ public class WebsocketListenerUser implements WebSocketListener
 				gameString += game.getArray()[i][j];
 			}	
 		}
-		origin.send("game:"+game.getWidth()+";"+game.getHeight()+";"+gameString+";"+(game.getRuntime() - (System.currentTimeMillis()/1000 - game.getStartTime())));
+		origin.send("game:"+game.getWidth()+";"+game.getHeight()+";"+gameString+";"+((long)game.getRuntime() - (System.currentTimeMillis()/(long)1000 - (long)game.getStartTime())));
 		String words = "";
 		for(String word:game.getWords())
 		{

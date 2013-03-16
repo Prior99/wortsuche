@@ -31,7 +31,7 @@ canvas
 
 .infoBox
 {
-	height: 400px;
+	height: 250px;
 	font-size: 12px;
 	overflow: scroll;
 	overflow-x: hidden;
@@ -39,13 +39,39 @@ canvas
 
 .infoBoxSmall
 {
-	font-size: 16px;
+	font-size: 15px;
 	overflow-x: hidden;
 }
 
 .chat
 {
 	height: 235px;
+}
+
+.chat > .send
+{
+	font-size: 12px;
+	height: 14px;
+	width: 140px;
+	border: 1px solid black;
+	width: 136px;
+	margin-left: 4px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+}
+.chat > .chatcontent
+{
+	margin-bottom: 4px;
+	height: 206px;
+	padding-left: 4px;
+	padding-right: 4px;
+	overflow: hidden;
+}
+
+.chatMsg
+{
+	border-top: 1px solid grey;
 }
 
 .selBox
@@ -113,5 +139,7 @@ canvas
 {
 	height: 144px;
 	padding: 3px;
-	width: 134px;
+	width: 140px;
+	overflow: scroll;
+	overflow-x: hidden;
 }

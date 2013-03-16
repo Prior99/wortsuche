@@ -15,10 +15,13 @@ public class ContentGame extends Content
 		add(div);
 		add(new ComponentDiv("selection","selBox"));
 		add(new ComponentDiv("info","infoBoxSmall"));
-		add(new ComponentDiv("words","infoBox"));
 		add(new ComponentDiv("timer","infoBoxSmall"));
+		add(new ComponentDiv("words","infoBox"));
 		add(new ComponentDiv("players","players"));
-		add(new ComponentDiv("chat","chat"));
+		ComponentDiv chat = new ComponentDiv("chat","chat");
+		chat.add(new ComponentDiv("chatcontent", "chatcontent"));
+		chat.add(new ComponentInputText("send", "chatten", "send"));
+		add(chat);
 		add(new ComponentDiv("clear","clear"));
 		ComponentDiv loading = new ComponentDiv("loading", "loading");
 		loading.addSubComponent(new ComponentImage("style/img/loading.gif"));
