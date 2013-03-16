@@ -20,7 +20,7 @@ public class ContentHighscore extends Content
 		ArrayList<HighscoreEntry> list = new ArrayList<HighscoreEntry>();
 		try
 		{
-			PreparedStatement stmt = page.getWebserver().getServer().getDatabaseConnection().getPreparedStatement("SELECT Username, Score, R, G, B FROM Users ORDER BY Score DESC");
+			PreparedStatement stmt = page.getWebserver().getServer().getDatabaseConnection().getPreparedStatement("SELECT Username, Score, R, G, B FROM Users ORDER BY Score DESC LIMIT 0,100");
 			stmt.execute();
 			ResultSet rs = stmt.getResultSet();
 			while(rs.next())

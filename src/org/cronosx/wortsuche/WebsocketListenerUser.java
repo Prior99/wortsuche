@@ -107,6 +107,11 @@ public class WebsocketListenerUser implements WebSocketListener
 		}
 	}
 	
+	public void notifyGameChange()
+	{
+		origin.send("newGame:");
+	}
+	
 	public void sendGame()
 	{
 		Game game = user.getServer().getGame();
@@ -118,7 +123,7 @@ public class WebsocketListenerUser implements WebSocketListener
 				gameString += game.getArray()[i][j];
 			}	
 		}
-		origin.send("game:"+game.getWidth()+";"+game.getHeight()+";"+gameString);
+		origin.send("game:"+game.getWidth()+";"+game.getHeight()+";"+gameString+";"+(game.getRuntime() - (System.currentTimeMillis()/1000 - game.getStartTime())));
 		String words = "";
 		for(String word:game.getWords())
 		{

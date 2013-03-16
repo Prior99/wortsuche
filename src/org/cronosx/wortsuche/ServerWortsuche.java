@@ -72,13 +72,18 @@ public class ServerWortsuche extends Server
 		try
 		{
 			stmt.execute("CREATE TABLE IF NOT EXISTS Users(" +
-							"ID 		INT			NOT NULL AUTO_INCREMENT PRIMARY KEY," +
-							"Username	VARCHAR(16)," +
-							"Password	VARCHAR(40)," +
-							"Score		INT,"+
-							"R			INT,"+
-							"G			INT,"+
-							"B			INT)");
+					"ID 		INT			NOT NULL AUTO_INCREMENT PRIMARY KEY," +
+					"Username	VARCHAR(16)," +
+					"Password	VARCHAR(40)," +
+					"Score		INT,"+
+					"R			INT,"+
+					"G			INT,"+
+					"B			INT)");
+			stmt.execute("CREATE TABLE IF NOT EXISTS Blog(" +
+					"ID 		INT			NOT NULL AUTO_INCREMENT PRIMARY KEY," +
+					"Created	INT," +
+					"Content	TEXT," +
+					"Headline	TEXT)");
 		}
 		catch(SQLException e)
 		{

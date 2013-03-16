@@ -40,6 +40,7 @@ public class PageHandlerWortsuche implements PageHandler
 			page.addPage("register", "Registrieren", ContentRegister.class);
 		}
 		page.addPage("highscore", "Highscore", ContentHighscore.class);
+		page.addPage("blog", "Blog", ContentBlog.class);
 		page.addPage("impressum", "Impressum", ContentImpressum.class);
 		page.addPage("stats", "Statistiken", ContentStatistics.class);
 		page.addPage("about", "Über", ContentAbout.class);
