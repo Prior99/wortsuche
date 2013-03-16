@@ -17,6 +17,8 @@ public class ContentGame extends Content
 		add(new ComponentDiv("info","infoBoxSmall"));
 		add(new ComponentDiv("words","infoBox"));
 		add(new ComponentDiv("timer","infoBoxSmall"));
+		add(new ComponentDiv("players","players"));
+		add(new ComponentDiv("chat","chat"));
 		add(new ComponentDiv("clear","clear"));
 		ComponentDiv loading = new ComponentDiv("loading", "loading");
 		loading.addSubComponent(new ComponentImage("style/img/loading.gif"));

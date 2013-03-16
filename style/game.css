@@ -15,15 +15,11 @@ canvas
 	position: relative;
 }
 
-.infoBox
+.infoBox, .infoBoxSmall, .selBox, .players, .chat
 {
 	border: 1px solid black;
 	width: 40px;
-	font-size: 12px;
-	height: 500px;
 	margin-top: 3px;
-	overflow: scroll;
-	overflow-x: hidden;
 	float:left;
 	width: 145px;
 	margin-left: 3px;
@@ -31,38 +27,33 @@ canvas
 	-moz-border-radius: 10px;
 	border-radius: 10px;
 	display: none;
+}
+
+.infoBox
+{
+	height: 400px;
+	font-size: 12px;
+	overflow: scroll;
+	overflow-x: hidden;
 }
 
 .infoBoxSmall
 {
-	border: 1px solid black;
-	width: 40px;
 	font-size: 16px;
-	margin-top: 3px;
 	overflow-x: hidden;
-	float:left;
-	width: 145px;
-	margin-left: 3px;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	border-radius: 10px;
-	display: none;
+}
+
+.chat
+{
+	height: 235px;
 }
 
 .selBox
 {
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	border-radius: 10px;
-	width: 145px;
-	margin-left: 3px;
-	border: 1px solid black;
 	font-size: 14px;
 	height: 16px;
-	float:left;
 	padding-left: 2px;
 	overflow: hidden;
-	display: none;
 }
 
 .clear
@@ -102,4 +93,25 @@ canvas
 	font-size: 20px;
 	z-index: 1000;
 	position: absolute;
+}
+
+.colorpreview
+{
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	margin-top: 4px;
+	display: block;
+	width: 10px;
+	height: 10px;
+	border: 1px solid grey;
+	float: left;
+	margin-right: 5px;
+	margin-left: 5px;
+}
+.players
+{
+	height: 144px;
+	padding: 3px;
+	width: 134px;
 }

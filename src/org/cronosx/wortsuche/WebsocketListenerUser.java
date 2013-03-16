@@ -89,6 +89,7 @@ public class WebsocketListenerUser implements WebSocketListener
 				{
 					origin.send("select:"+sel.x1+";"+sel.y1+";"+sel.x2+";"+sel.y2+";"+sel.color);
 				}
+				sendUsers();
 				break;
 			}
 			case "remove":
@@ -105,6 +106,16 @@ public class WebsocketListenerUser implements WebSocketListener
 				break;
 			}
 		}
+	}
+	
+	public void sendUsers()
+	{
+		String s = "users:";
+		for(User u:user.getServer().getGame().getUsers())
+		{
+			s+=u.getUsername()+"#"+u.getColor()+";";
+		}
+		origin.send(s.substring(0, s.length() -1));
 	}
 	
 	public void notifyGameChange()

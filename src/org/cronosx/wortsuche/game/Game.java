@@ -41,6 +41,11 @@ public class Game
 		users = new ArrayList<User>();
 	}
 	
+	public User[] getUsers()
+	{
+		return users.toArray(new User[]{});
+	}
+	
 	public ArrayList<String> getWords()
 	{
 		return allWords;
@@ -79,8 +84,6 @@ public class Game
 		{
 			Possibility bestPos = null;
 			ArrayList<String> words = wwords.get(i);
-			int index = 0;
-			int lastProgress=-1;
 			if(words != null)
 			for(int j = 0; j < words.size(); j++)
 			{	
@@ -89,13 +92,6 @@ public class Game
 				String word = words.get(j);
 				int sx = (int) (Math.random()*width);
 				int sy = (int) (Math.random()*height);
-				int progress = (int)((index/(float)dictSize)*100);
-				if(progress%2 == 0 && progress != lastProgress)
-				{
-					System.out.print("\rProgress: "+progress+"%\r");
-					lastProgress = progress;
-				}
-				index++;
 				for(int x = 0; x < width; x++)
 				{
 					for(int y = 0; y < height; y++)
@@ -187,7 +183,7 @@ public class Game
 	{
 		if(word.equals(getSelection(x1, y1, x2, y2)) && allWords.contains(word))
 		{
-			int inc = (int)(25*(this.origWordCount - this.allWords.size())/(float)(this.origWordCount) + 1);
+			int inc = (int)(server.getConfig().getInt("Score", 5)*(this.origWordCount - this.allWords.size())/(float)(this.origWordCount) + 1);
 			u.incScore(inc);
 			broadcast("remove:"+word+";"+x1+";"+y1+";"+x2+";"+y2+";"+u.getColorOpaque());
 			this.allWords.remove(word);
@@ -325,11 +321,21 @@ public class Game
 	public void join(User user)
 	{
 		users.add(user);
+		for(User u: users)
+		{
+			if(u != null && u.getListener() != null && u.getListener().getOrigin() != null)
+				u.getListener().sendUsers();
+		}
 	}
 	
 	public void leave(User user)
 	{
 		users.remove(user);
+		for(User u: users)
+		{
+			if(u != null && u.getListener() != null && u.getListener().getOrigin() != null)
+				u.getListener().sendUsers();
+		}
 	}
 	
 	public int getWidth()
