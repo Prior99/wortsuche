@@ -320,19 +320,18 @@ public class Game
 	
 	public void join(User user)
 	{
-		users.add(user);
+		if(!users.contains(user))
+			users.add(user);
 		for(User u: users)
 		{
 			if(u != null && u.getListener() != null && u.getListener().getOrigin() != null)
 				u.getListener().sendUsers();
 		}
-		chat(user.getUsername()+" hat das Spiel betreten", "Server", "black");
 	}
 	
 	public void leave(User user)
 	{
 		users.remove(user);
-		chat(user.getUsername()+" hat das Spiel verlassen", "Server", "black");
 		for(User u: users)
 		{
 			if(u != null && u.getListener() != null && u.getListener().getOrigin() != null)
