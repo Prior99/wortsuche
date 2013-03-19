@@ -1,0 +1,27 @@
+.blogentry
+{
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	border: 1px solid black;
+	margin-bottom: 10px;
+	padding: 10px;
+}
+
+.blogentry > .blogcontent
+{
+	
+}
+
+.blogentry > .blogtime
+{
+	float: right;
+	clear: both;
+	font-style: italic;
+}
+
+.blogentry > h2
+{
+	margin-top: 5px;
+	border-bottom: 1px solid grey;
+}
