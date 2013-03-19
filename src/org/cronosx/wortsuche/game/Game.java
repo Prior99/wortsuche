@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import org.cronosx.tools.LimitedQueue;
 import org.cronosx.wortsuche.ServerWortsuche;
 import org.cronosx.wortsuche.User;
 
@@ -31,9 +32,11 @@ public class Game
 	private int started = 0;
 	private Thread timer;
 	private Game game;
+	private LimitedQueue<Message> chatBuffer;
 	
 	public Game(ServerWortsuche server)
 	{
+		chatBuffer = new LimitedQueue<Message>(64);
 		game = this;
 		this.server = server;
 		if(!this.loadFromDisk()) 
@@ -339,9 +342,21 @@ public class Game
 		}
 	}
 	
+	public void sendChat(User u)
+	{
+		for(Message m:chatBuffer)
+		{
+			if(u != null && u.getListener() != null && u.getListener().getOrigin() != null)
+			{
+				u.getListener().getOrigin().send("chat:"+m.user+";"+m.color+";"+m.msg+";"+m.time);
+			}
+		}
+	}
+	
 	public void chat(String msg, String user, String userColor)
 	{
-		broadcast("chat:"+user+";"+userColor+";"+msg);
+		chatBuffer.add(new Message(msg, user, userColor, (int)(System.currentTimeMillis() / 1000)));
+		broadcast("chat:"+user+";"+userColor+";"+msg+";"+(int)(System.currentTimeMillis() / 1000));
 	}
 	
 	public int getWidth()
@@ -477,5 +492,20 @@ public class Game
 			return true;
 		}
 		else return false;
+	}
+	
+	class Message
+	{
+		public String msg;
+		public String user;
+		public String color;
+		public int time;
+		public Message(String msg, String user, String color, int time)
+		{
+			this.msg = msg;
+			this.user = user;
+			this.color = color;
+			this.time = time;
+		}
 	}
 }

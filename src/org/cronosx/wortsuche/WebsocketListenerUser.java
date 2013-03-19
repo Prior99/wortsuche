@@ -90,6 +90,7 @@ public class WebsocketListenerUser implements WebSocketListener
 					origin.send("select:"+sel.x1+";"+sel.y1+";"+sel.x2+";"+sel.y2+";"+sel.color);
 				}
 				sendUsers();
+				user.getServer().getGame().sendChat(user);
 				break;
 			}
 			case "remove":
