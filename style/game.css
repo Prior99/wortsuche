@@ -67,6 +67,8 @@ canvas
 	padding-left: 4px;
 	padding-right: 4px;
 	overflow: hidden;
+	overflow: scroll;
+	overflow-x: hidden;
 }
 
 .chatMsg
