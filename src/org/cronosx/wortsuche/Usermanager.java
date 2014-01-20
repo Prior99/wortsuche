@@ -5,15 +5,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import java.sql.PreparedStatement;
+import java.util.*;
 
 public class Usermanager
 {
 	private ServerWortsuche	server;
-	private ArrayList<User>	users;
+	private List<User>	users;
 	
 	public Usermanager(ServerWortsuche server)
 	{
-		users = new ArrayList<User>();
+		users = new ArrayList<>();
 		this.server = server;
 	}
 	
@@ -45,7 +46,7 @@ public class Usermanager
 	{
 		try
 		{
-			PreparedStatement stmt = server.getDatabaseConnection()
+			PreparedStatement stmt = server.getDatabase()
 					.getPreparedStatement(
 							"SELECT ID FROM Users WHERE Username = ?");
 			stmt.setString(1, username);
@@ -65,7 +66,7 @@ public class Usermanager
 		try
 		{
 			PreparedStatement stmt = server
-					.getDatabaseConnection()
+					.getDatabase()
 					.getPreparedStatement(
 							"INSERT INTO Users(Username, Password, Score, R, G, B) VALUES (?, ?, 0, ?, ?, ?)");
 			stmt.setString(1, username);
@@ -86,7 +87,7 @@ public class Usermanager
 		try
 		{
 			PreparedStatement stmt = server
-					.getDatabaseConnection()
+					.getDatabase()
 					.getPreparedStatement(
 							"SELECT ID FROM Users WHERE Username = ? AND Password = ?");
 			stmt.setString(1, username);

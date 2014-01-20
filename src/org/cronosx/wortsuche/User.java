@@ -7,13 +7,13 @@ import java.sql.PreparedStatement;
 
 public class User
 {
-	private WebsocketListenerUser websocket;
-	private String username;
+	private final String username;
 	private int score;
-	private ServerWortsuche server;
+	private final ServerWortsuche server;
 	private int r;
 	private int g;
 	private int b;
+	private int loggedIn;
 	
 	public void incScore(int i)
 	{
@@ -54,12 +54,7 @@ public class User
 		return server;
 	}
 	
-	public void openWebsocket(WebsocketListenerUser websocket)
-	{
-		this.websocket = websocket;
-	}
-	
-	public void closeWebsocket()
+	public void close()
 	{
 		try
 		{
@@ -70,7 +65,6 @@ public class User
 			e.printStackTrace();
 		}
 		server.getUserManager().removeCachedUser(this);
-		this.websocket = null;
 	}
 	
 	public String getUsername()
@@ -85,17 +79,22 @@ public class User
 	
 	public boolean isLoggedIn()
 	{
-		return websocket != null;
+		return loggedIn > 0;
 	}
 	
-	public WebsocketListenerUser getListener()
+	public void clientConnected()
 	{
-		return websocket;
+		loggedIn++;
+	}
+	
+	public void clientDisconnected()
+	{
+		loggedIn--;
 	}
 	
 	public void importFromDB() throws SQLException
 	{
-		PreparedStatement stmt = server.getDatabaseConnection().getPreparedStatement("SELECT Score, R, G, B FROM Users WHERE Username = ?");
+		PreparedStatement stmt = server.getDatabase().getPreparedStatement("SELECT Score, R, G, B FROM Users WHERE Username = ?");
 		stmt.setString(1, username);
 		stmt.execute();
 		ResultSet rs = stmt.getResultSet();
@@ -110,8 +109,8 @@ public class User
 	
 	public void exportToDB() throws SQLException
 	{
-		server.getLog().log("Exporting user "+username+" to database",50);
-		PreparedStatement stmt = server.getDatabaseConnection().getPreparedStatement("UPDATE Users SET Score = ?, R = ?, G = ?, B = ? WHERE Username = ?");
+		System.out.println("Exporting user "+username+" to database");
+		PreparedStatement stmt = server.getDatabase().getPreparedStatement("UPDATE Users SET Score = ?, R = ?, G = ?, B = ? WHERE Username = ?");
 		stmt.setInt(1, score);
 		stmt.setInt(2, r);
 		stmt.setInt(3, g);

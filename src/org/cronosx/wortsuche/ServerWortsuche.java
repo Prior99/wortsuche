@@ -1,22 +1,46 @@
 package org.cronosx.wortsuche;
 
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.security.*;
+import java.util.*;
 
-import org.cronosx.cgi.CGI;
-import org.cronosx.server.DefaultWebSocketListener;
-import org.cronosx.server.Server;
-import org.cronosx.webserver.Webserver;
-import org.cronosx.wortsuche.game.Game;
-
-public class ServerWortsuche extends Server
+public class ServerWortsuche
 {
-	private Usermanager users;
-	private Game game;
+	private final Usermanager users;
+	private final Game game;
+	private final Config config;
+	private final DatabaseConnection dbConn;
+	private MessageDigest sha1;
+	
 	public ServerWortsuche()
 	{
+		try
+		{
+			sha1 = MessageDigest.getInstance("SHA-1");
+		}
+		catch(NoSuchAlgorithmException e)
+		{
+			System.out.println("No algorithm for SHA-1");
+			e.printStackTrace();
+		}
+		this.config = new Config();
 		this.users = new Usermanager(this);
 		this.game = new Game(this);
+		dbConn = new DatabaseConnection(config.getDBServer(), config.getDBUser(), config.getDBPassword(), config.getDBDatabase());
+	}
+	
+	public Config getConfig()
+	{
+		return config;
+	}
+	
+	public DatabaseConnection getDatabase()
+	{
+		return dbConn;
+	}
+	
+	public void shutdown()
+	{
+		
 	}
 	
 	public Game getGame()
@@ -36,59 +60,117 @@ public class ServerWortsuche extends Server
 			game.saveToDisk();
 			users.save();
 		}
-		catch(SQLException e)
+		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
 	}
 	
-	@Override
-	protected CGI getDefaultCGIHandler()
+	/**
+	 * Encrypts the string with an unsalted SHA1-checksum
+	 * <p>
+	 * @param toEncrypt string that should be encrypted
+	 * @return encrypted string
+	 */
+	public String getSHA1(String toEncrypt)
 	{
-		// TODO Auto-generated method stub
-		return new CGI(getWebserver(), new PageHandlerWortsuche(this));
+		byte[] enc;
+		if(sha1 == null)
+		{
+			enc = toEncrypt.getBytes();
+			System.out.println("Warning: As no SHA-1 Algorithm was available, string is stored unencrypted in HEX");
+		}
+		else
+			enc = sha1.digest(toEncrypt.getBytes());
+		String result = "";
+		for(int i=0; i < enc.length; i++) 
+		{
+			result += Integer.toString((enc[i] & 0xff) + 0x100, 16).substring(1);
+		}
+		return result;
 	}
 	
-	public Webserver getWebserver()
+	public static void main(String[] args)
 	{
-		return this.webserver;
-	}
-
-	@Override
-	public DefaultWebSocketListener getDefaultWebSocketListener()
-	{
-		return new WebsocketListenerWortsuche(this);
-	}
-
-	@Override
-	public Webserver getDefaultWebserver()
-	{
-		return new Webserver(this.getLog(), this.getConfig(), this);
-	}
-
-	@Override
-	public void createDatabase(Statement stmt)
-	{
-		try
+		final ServerWortsuche server = new ServerWortsuche();
+		final Thread t = new Thread()
 		{
-			stmt.execute("CREATE TABLE IF NOT EXISTS Users(" +
-					"ID 		INT			NOT NULL AUTO_INCREMENT PRIMARY KEY," +
-					"Username	VARCHAR(16)," +
-					"Password	VARCHAR(40)," +
-					"Score		INT,"+
-					"R			INT,"+
-					"G			INT,"+
-					"B			INT)");
-			stmt.execute("CREATE TABLE IF NOT EXISTS Blog(" +
-					"ID 		INT			NOT NULL AUTO_INCREMENT PRIMARY KEY," +
-					"Created	INT," +
-					"Content	TEXT," +
-					"Headline	TEXT)");
-		}
-		catch(SQLException e)
+			public void run()
+			{
+				while(!isInterrupted())
+				{
+					try
+					{
+						Thread.sleep(server.getConfig().getExportTimeout());
+					}
+					catch(InterruptedException e)
+					{
+						e.printStackTrace();
+					}
+					System.out.println("Starting scheduled export to database");
+					server.save();	
+				}
+			}
+		};
+		t.start();
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run()
+			{
+				System.out.println("Received CTRL+C, saving all remaining data");
+				server.save();
+				server.shutdown();
+			}
+		});
+		final Thread t2 = new Thread()
 		{
-			e.printStackTrace();
-		}
+			public void run()
+			{
+				Scanner sc = new Scanner(System.in);
+				while(!isInterrupted())
+				{
+					while(!sc.hasNextLine())
+					{
+						try
+						{
+							Thread.sleep(200);
+						}
+						catch(InterruptedException e)
+						{
+							e.printStackTrace();
+						}
+					}
+					String s = sc.nextLine();
+					String[] args = s.split(" ");
+					System.out.println("Running command \""+s+"\"");
+					switch(args[0])
+					{
+						case "exit":
+						{
+							server.shutdown();
+							t.interrupt();
+							interrupt();
+							break;
+						}
+						case "save":
+						{
+							server.save();
+							break;
+						}
+						case "regenerate":
+						{
+							server.getGame().generateGame();
+							break;
+						}
+						case "help":
+						{
+							System.out.println("Known commands are: exit, save, regenerate, help");
+							break;
+						}
+					}
+				}
+				sc.close();
+			}
+		};
+		t2.start();
 	}
-	
 }
