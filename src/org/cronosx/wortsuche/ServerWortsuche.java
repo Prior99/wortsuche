@@ -10,6 +10,7 @@ public class ServerWortsuche
 	private final Config config;
 	private final DatabaseConnection dbConn;
 	private MessageDigest sha1;
+	private WelcomeSocket ws;
 	
 	public ServerWortsuche()
 	{
@@ -25,6 +26,7 @@ public class ServerWortsuche
 		this.config = new Config();
 		this.users = new Usermanager(this);
 		this.game = new Game(this);
+		this.ws = new WelcomeSocket(config.getPort(), this.game);
 		dbConn = new DatabaseConnection(config.getDBServer(), config.getDBUser(), config.getDBPassword(), config.getDBDatabase());
 	}
 	

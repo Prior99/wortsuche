@@ -20,8 +20,8 @@ public class Game
 	private List<Selection> selections;
 	private List<User> users;
 	private List<ClientWrapper> clients;
-	private int width = 75;
-	private int height = 50;
+	private int width = 68;
+	private int height = 43;
 	private int maxWordLen;
 	private int origWordCount = 0;
 	private int dictSize = 0;

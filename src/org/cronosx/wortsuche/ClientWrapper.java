@@ -210,6 +210,18 @@ public class ClientWrapper
 		}
 		jObj.put("data", sb.toString());
 		client.sendRequest("game", jObj);
+		sendWords();
+		sendColor();
+		sendUsers();
+	}
+	
+	public void sendWords()
+	{
+		JSONObject jObj = new JSONObject();
+		for(String word : server.getGame().getWords())
+			jObj.append("words", word);
+		jObj.append("count", server.getGame().getOriginalWordCount());
+		client.sendRequest("words", jObj);
 	}
 	
 	public void notifyGameChange()
@@ -220,6 +232,14 @@ public class ClientWrapper
 	public void sendUsers()
 	{
 		JSONObject jObj = new JSONObject();
+		for(User u : server.getGame().getUsers())
+		{
+			JSONObject jU = new JSONObject();
+			jU.put("color", u.getColor());
+			jU.put("username", u.getUsername());
+			jObj.append("users", jU);
+		}
+		client.sendRequest("users", jObj);
 	}
 	
 	public void sendChat(String user, String color, String text, int time)
