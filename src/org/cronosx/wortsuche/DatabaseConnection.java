@@ -17,6 +17,7 @@ public class DatabaseConnection
 		this.password = password;
 		this.database = database;
 		connect();
+		createDatabase();
 	}
 	
 	private void connect()
@@ -55,10 +56,11 @@ public class DatabaseConnection
 		return stmt;
 	}
 
-	public void createDatabase(Statement stmt)
+	public void createDatabase()
 	{
 		try
 		{
+			Statement stmt = connection.createStatement();
 			stmt.execute("CREATE TABLE IF NOT EXISTS Users(" +
 					"ID 		INT			NOT NULL AUTO_INCREMENT PRIMARY KEY," +
 					"Username	VARCHAR(16)," +

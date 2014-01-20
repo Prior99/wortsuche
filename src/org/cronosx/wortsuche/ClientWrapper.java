@@ -64,6 +64,17 @@ public class ClientWrapper
 	private void registerUserHandlers()
 	{
 		final ClientWrapper self = this;
+		client.addRequestHandler("profile", new RequestHandler()
+		{
+			@Override
+			public JSONObject invoke(JSONObject jObj)
+			{
+				JSONObject jObj2 = new JSONObject();
+				jObj2.put("username", user.getUsername());
+				jObj2.put("score", user.getScore());
+				return jObj2;
+			}
+		});
 		client.addRequestHandler("requestColor", new RequestHandler()
 		{
 			@Override
