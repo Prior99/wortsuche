@@ -69,13 +69,14 @@ public class ClientWrapper
 				JSONObject answer = new JSONObject();
 				try
 				{
-					PreparedStatement stmt = server.getDatabase().getPreparedStatement("SELECT Username, Score FROM `UserRanks` ORDER BY Score DESC LIMIT 7");
+					PreparedStatement stmt = server.getDatabase().getPreparedStatement("SELECT user.Rank, Username, Score FROM `UserRanks` ORDER BY Score DESC LIMIT 7");
 					ResultSet rs = stmt.executeQuery();
 					while(rs.next())
 					{
 						JSONObject jUser = new JSONObject();
 						jUser.put("username", rs.getString("Username"));
 						jUser.put("score", rs.getString("Score"));
+						jUser.put("rank", rs.getString("user.Rank"));
 						answer.append("top", jUser);
 					}
 					stmt.close();
@@ -191,7 +192,7 @@ public class ClientWrapper
 						JSONObject jUser = new JSONObject();
 						jUser.put("username", rs.getString("user.Username"));
 						jUser.put("score", rs.getString("user.Score"));
-						jUser.put("platz", rs.getString("user.Rank"));
+						jUser.put("rank", rs.getString("user.Rank"));
 						answer.append("around", jUser);
 					}
 					stmt.close();
@@ -203,7 +204,7 @@ public class ClientWrapper
 						JSONObject jUser = new JSONObject();
 						jUser.put("username", rs.getString("user.Username"));
 						jUser.put("score", rs.getString("user.Score"));
-						jUser.put("platz", rs.getString("user.Rank"));
+						jUser.put("rank", rs.getString("user.Rank"));
 						answer.append("around", jUser);
 					}
 					stmt.close();
@@ -214,7 +215,7 @@ public class ClientWrapper
 						JSONObject jUser = new JSONObject();
 						jUser.put("username", rs.getString("Username"));
 						jUser.put("score", rs.getString("Score"));
-						jUser.put("platz", rs.getString("user.Rank"));
+						jUser.put("rank", rs.getString("user.Rank"));
 						answer.append("top", jUser);
 					}
 					stmt.close();
