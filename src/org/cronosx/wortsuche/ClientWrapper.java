@@ -124,7 +124,7 @@ public class ClientWrapper
 				if(jObj.has("r") && jObj.has("g") && jObj.has("b"))
 				{
 					user.setColor(jObj.getInt("r"), jObj.getInt("g"), jObj.getInt("b"));
-					//sendColor();
+					sendColor();
 					okay = true;
 				}
 				JSONObject answer = new JSONObject();
@@ -362,9 +362,7 @@ public class ClientWrapper
 	public void sendColor()
 	{
 		JSONObject jObj = new JSONObject();
-		jObj.put("r", user.getR());
-		jObj.put("g", user.getG());
-		jObj.put("b", user.getB());
+		jObj.put("color", user.getColorOpaque());
 		client.sendRequest("color", jObj);
 	}
 }
