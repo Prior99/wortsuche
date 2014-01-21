@@ -390,7 +390,6 @@ public class Game
 	
 	public void saveToDisk()
 	{
-		System.out.println("Saving game...");
 		try
 		{
 			File f = new File("game.sav");

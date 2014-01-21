@@ -109,7 +109,6 @@ public class ServerWortsuche
 					{
 						e.printStackTrace();
 					}
-					System.out.println("Starting scheduled export to database");
 					server.save();	
 				}
 			}

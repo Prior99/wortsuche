@@ -88,7 +88,6 @@ public class User
 	
 	public void exportToDB() throws SQLException
 	{
-		System.out.println("Exporting user "+username+" to database");
 		PreparedStatement stmt = server.getDatabase().getPreparedStatement("UPDATE Users SET Score = ?, R = ?, G = ?, B = ? WHERE Username = ?");
 		stmt.setInt(1, score);
 		stmt.setInt(2, color.getR());
