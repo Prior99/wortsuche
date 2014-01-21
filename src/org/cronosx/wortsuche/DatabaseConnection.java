@@ -74,6 +74,20 @@ public class DatabaseConnection
 					"Created	INT," +
 					"Content	TEXT," +
 					"Headline	TEXT)");
+			stmt.execute("CREATE OR REPLACE VIEW UserRanks AS SELECT ID, Username, Password , Score, R, G, B," +
+					"(" +
+					"SELECT (" +
+					"SELECT COUNT(*) AS Amount FROM Users" +
+					") - COUNT( * ) +1" +
+					"" +
+					" AS Rank " +
+					"FROM Users " +
+					"WHERE Score <= u.Score " +
+					"ORDER BY Score DESC " +
+					") AS Rank " +
+					"FROM Users u " +
+					"ORDER BY Rank " +
+					"LIMIT 0 , 30");
 		}
 		catch(SQLException e)
 		{
