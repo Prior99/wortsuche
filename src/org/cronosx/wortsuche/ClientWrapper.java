@@ -120,9 +120,7 @@ public class ClientWrapper
 			{
 				JSONObject answer = new JSONObject();
 				answer.put("okay", true);
-				answer.put("r", user.getR());
-				answer.put("g", user.getG());
-				answer.put("b", user.getB());
+				answer.put("color", user.getColor().toJSONObject());
 				return answer;
 			}
 		});
@@ -134,15 +132,13 @@ public class ClientWrapper
 				boolean okay = false;
 				if(jObj.has("r") && jObj.has("g") && jObj.has("b"))
 				{
-					user.setColor(jObj.getInt("r"), jObj.getInt("g"), jObj.getInt("b"));
+					user.setColor(new Color((short)jObj.getInt("r"), (short)jObj.getInt("g"), (short)jObj.getInt("b")));
 					sendColor();
 					okay = true;
 				}
 				JSONObject answer = new JSONObject();
 				answer.put("okay", okay);
-				answer.put("r", user.getR());
-				answer.put("g", user.getG());
-				answer.put("b", user.getB());
+				answer.put("r", user.getColor().toJSONObject());
 				return answer;
 			}
 		});
@@ -269,14 +265,14 @@ public class ClientWrapper
 		});
 	}
 	
-	public void sendSelect(int x1, int y1, int x2, int y2, String color)
+	public void sendSelect(int x1, int y1, int x2, int y2, Color color)
 	{
 		JSONObject jObj = new JSONObject();
 		jObj.put("x1", x1);
 		jObj.put("y1", y1);
 		jObj.put("x2", x2);
 		jObj.put("y2", y2);
-		jObj.put("color", color);
+		jObj.put("color", color.toJSONObject());
 		client.sendRequest("select", jObj);
 	}
 	
@@ -341,31 +337,31 @@ public class ClientWrapper
 		for(User u : server.getGame().getUsers())
 		{
 			JSONObject jU = new JSONObject();
-			jU.put("color", u.getColor());
+			jU.put("color", u.getColor().toJSONObject());
 			jU.put("username", u.getUsername());
 			jObj.append("users", jU);
 		}
 		client.sendRequest("users", jObj);
 	}
 	
-	public void sendChat(String user, String color, String text, int time)
+	public void sendChat(String user, Color color, String text, int time)
 	{
 		JSONObject jObj = new JSONObject();
 		jObj.put("username", user);
 		jObj.put("time", time);
-		jObj.put("color", color);
+		jObj.put("color", color.toJSONObject());
 		jObj.put("msg", text);
 		client.sendRequest("chat", jObj);
 	}
 	
-	public void sendRemoveWord(String word, int x1, int y1, int x2, int y2, String color)
+	public void sendRemoveWord(String word, int x1, int y1, int x2, int y2, Color color)
 	{
 		JSONObject jObj = new JSONObject();
 		jObj.put("x1", x1);
 		jObj.put("y1", y1);
 		jObj.put("x2", x2);
 		jObj.put("y2", y2);
-		jObj.put("color", color);
+		jObj.put("color", color.toJSONObject());
 		jObj.put("word", word);
 		client.sendRequest("remove", jObj);
 	}
@@ -373,7 +369,7 @@ public class ClientWrapper
 	public void sendColor()
 	{
 		JSONObject jObj = new JSONObject();
-		jObj.put("color", user.getColorOpaque());
+		jObj.put("color", user.getColor().toJSONObject());
 		client.sendRequest("color", jObj);
 	}
 }

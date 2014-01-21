@@ -192,10 +192,10 @@ public class Game
 			int inc = (int)(server.getConfig().getScore()*(this.origWordCount - this.allWords.size())/(float)(this.origWordCount) + 1);
 			for(ClientWrapper cw2 : clients)
 			{
-				cw2.sendRemoveWord(word, x1, y1, x2, y2, cw.getUser().getColorOpaque());
+				cw2.sendRemoveWord(word, x1, y1, x2, y2, cw.getUser().getColor());
 			}
 			this.allWords.remove(word);
-			this.selections.add(new Selection(x1, y1, x2, y2, cw.getUser().getColorOpaque()));
+			this.selections.add(new Selection(x1, y1, x2, y2, cw.getUser().getColor()));
 			if(this.allWords.isEmpty())
 			{
 				generateGame();
@@ -340,7 +340,7 @@ public class Game
 		}
 	}
 	
-	public void chat(String msg, String user, String userColor)
+	public void chat(String msg, String user, Color userColor)
 	{
 		int time = (int)(System.currentTimeMillis() / 1000);
 		chatBuffer.add(new Message(msg, user, userColor, time));
@@ -371,8 +371,8 @@ public class Game
 		public int x2;
 		public int y1;
 		public int y2;
-		public String color;
-		public Selection(int x1, int y1, int x2, int y2, String color)
+		public Color color;
+		public Selection(int x1, int y1, int x2, int y2, Color color)
 		{
 			this.x1 = x1;
 			this.y1 = y1;
@@ -414,7 +414,9 @@ public class Game
 				stream.writeInt(selections.get(i).y1);
 				stream.writeInt(selections.get(i).x2);
 				stream.writeInt(selections.get(i).y2);
-				stream.writeUTF(selections.get(i).color);
+				stream.writeShort(selections.get(i).color.getR());
+				stream.writeShort(selections.get(i).color.getG());
+				stream.writeShort(selections.get(i).color.getB());
 			}
 			stream.close();
 		}
@@ -452,7 +454,8 @@ public class Game
 				selections = new ArrayList<Selection>();
 				for(int i = 0; i < l2; i++)
 				{
-					selections.add(new Selection(stream.readInt(), stream.readInt(), stream.readInt(), stream.readInt(), stream.readUTF()));
+					selections.add(new Selection(stream.readInt(), stream.readInt(), stream.readInt(), stream.readInt(), 
+							new Color(stream.readShort(), stream.readShort(), stream.readShort())));
 				}
 				stream.close();
 				f.delete();
@@ -490,9 +493,9 @@ public class Game
 	{
 		public String msg;
 		public String user;
-		public String color;
+		public Color color;
 		public int time;
-		public Message(String msg, String user, String color, int time)
+		public Message(String msg, String user, Color color, int time)
 		{
 			this.msg = msg;
 			this.user = user;
