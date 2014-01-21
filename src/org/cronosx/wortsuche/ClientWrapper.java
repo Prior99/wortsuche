@@ -1,6 +1,7 @@
 package org.cronosx.wortsuche;
 
 import java.net.*;
+import java.sql.*;
 import org.cronosx.websockets.*;
 import org.json.*;
 
@@ -59,6 +60,32 @@ public class ClientWrapper
 				return answer;
 			}
 		});
+		client.addRequestHandler("highscore", new RequestHandler()
+		{
+			@Override
+			public JSONObject invoke(JSONObject jObj)
+			{
+				JSONObject answer = new JSONObject();
+				try
+				{
+					PreparedStatement stmt = server.getDatabase().getPreparedStatement("SELECT Username, Score FROM `Users` ORDER BY Score DESC LIMIT 7");
+					ResultSet rs = stmt.executeQuery();
+					while(rs.next())
+					{
+						JSONObject jUser = new JSONObject();
+						jUser.put("username", rs.getString("Username"));
+						jUser.put("score", rs.getString("Score"));
+						answer.append("top", jUser);
+					}
+					stmt.close();
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+				return answer;
+			}
+		});
 	}
 	
 	private void registerUserHandlers()
@@ -80,9 +107,11 @@ public class ClientWrapper
 			@Override
 			public JSONObject invoke(JSONObject jObj)
 			{
-				sendColor();
 				JSONObject answer = new JSONObject();
 				answer.put("okay", true);
+				answer.put("r", user.getR());
+				answer.put("g", user.getG());
+				answer.put("b", user.getB());
 				return answer;
 			}
 		});
@@ -95,11 +124,14 @@ public class ClientWrapper
 				if(jObj.has("r") && jObj.has("g") && jObj.has("b"))
 				{
 					user.setColor(jObj.getInt("r"), jObj.getInt("g"), jObj.getInt("b"));
-					sendColor();
+					//sendColor();
 					okay = true;
 				}
 				JSONObject answer = new JSONObject();
 				answer.put("okay", okay);
+				answer.put("r", user.getR());
+				answer.put("g", user.getG());
+				answer.put("b", user.getB());
 				return answer;
 			}
 		});
@@ -132,6 +164,54 @@ public class ClientWrapper
 				}
 				JSONObject answer = new JSONObject();
 				answer.put("okay", true);
+				return answer;
+			}
+		});
+		client.addRequestHandler("highscore", new RequestHandler()
+		{
+			@Override
+			public JSONObject invoke(JSONObject jObj)
+			{
+				JSONObject answer = new JSONObject();
+				try
+				{
+					PreparedStatement stmt = server.getDatabase().getPreparedStatement("SELECT user.Username, user.Score FROM `Users` AS user, (SELECT ID, Score FROM `Users` WHERE `Username` = ?) AS me WHERE user.Score > me.score ORDER BY user.Score DESC LIMIT 3");
+					stmt.setString(1, user.getUsername());
+					ResultSet rs = stmt.executeQuery();
+					while(rs.next())
+					{
+						JSONObject jUser = new JSONObject();
+						jUser.put("username", rs.getString("user.Username"));
+						jUser.put("score", rs.getString("user.Score"));
+						answer.append("around", jUser);
+					}
+					stmt.close();
+					stmt = server.getDatabase().getPreparedStatement("SELECT user.Username, user.Score FROM `Users` AS user, (SELECT ID, Score FROM `Users` WHERE `Username` = ?) AS me WHERE user.Score <= me.score ORDER BY user.Score DESC LIMIT 4");
+					stmt.setString(1, user.getUsername());
+					rs = stmt.executeQuery();
+					while(rs.next())
+					{
+						JSONObject jUser = new JSONObject();
+						jUser.put("username", rs.getString("user.Username"));
+						jUser.put("score", rs.getString("user.Score"));
+						answer.append("around", jUser);
+					}
+					stmt.close();
+					stmt = server.getDatabase().getPreparedStatement("SELECT Username, Score FROM `Users` ORDER BY Score DESC LIMIT 7");
+					rs = stmt.executeQuery();
+					while(rs.next())
+					{
+						JSONObject jUser = new JSONObject();
+						jUser.put("username", rs.getString("Username"));
+						jUser.put("score", rs.getString("Score"));
+						answer.append("top", jUser);
+					}
+					stmt.close();
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
 				return answer;
 			}
 		});
