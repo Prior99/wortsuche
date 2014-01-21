@@ -28,7 +28,8 @@ public class ClientWrapper
 					if(server.getUserManager().isLoginCorrect(username, password))
 					{
 						user = server.getUserManager().getUser(username);
-						server.getGame().join(user);
+						if(!user.isLoggedIn())
+							server.getGame().join(user);
 						user.clientConnected();
 						okay = true;
 						registerUserHandlers();
@@ -90,6 +91,16 @@ public class ClientWrapper
 	
 	private void registerUserHandlers()
 	{
+		client.addCloseHandler(new CloseHandler()
+		{
+			@Override
+			public void onClose()
+			{
+				user.clientDisconnected();
+				if(!user.isLoggedIn())
+					server.getGame().leave(user);
+			}
+		});
 		final ClientWrapper self = this;
 		client.addRequestHandler("profile", new RequestHandler()
 		{

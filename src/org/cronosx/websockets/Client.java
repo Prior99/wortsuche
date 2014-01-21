@@ -11,6 +11,7 @@ public class Client implements WebSocketListener
 	private boolean ready;
 	private final Map<Integer, ResponseHandler> responses;
 	private final Map<String, RequestHandler> requests;
+	private final List<CloseHandler> closeHandlers;
 	private int currentID;
 	private boolean closed;
 	private boolean okay;
@@ -21,6 +22,7 @@ public class Client implements WebSocketListener
 		currentID = 1;
 		requests = new TreeMap<>();
 		responses = new TreeMap<>();
+		closeHandlers = new LinkedList<>();
 		try
 		{
 			this.s = new WebSocket(s);
@@ -32,6 +34,11 @@ public class Client implements WebSocketListener
 			ready = false;
 			System.out.println("Unable to open stream to newly opened socket");
 		}
+	}
+	
+	public void addCloseHandler(CloseHandler h)
+	{
+		closeHandlers.add(h);
 	}
 	
 	public boolean isClosed()
@@ -146,7 +153,8 @@ public class Client implements WebSocketListener
 	@Override
 	public void onClose(WebSocket origin) 
 	{
-		System.out.println("Socket closed");
+		for(CloseHandler h : closeHandlers)
+			h.onClose();
 		shutdown();
 	}
 	
