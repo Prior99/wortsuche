@@ -97,7 +97,6 @@ public class ServerWortsuche
 	
 	public static void main(String[] args)
 	{
-		System.out.println("MACH MICH THREADSAFE");
 		final ServerWortsuche server = new ServerWortsuche();
 		final Thread t = new Thread()
 		{
