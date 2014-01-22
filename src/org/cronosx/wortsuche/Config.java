@@ -16,6 +16,8 @@ public class Config
 	private String dbPassword;
 	private String dbDatabase;
 	
+	private String webUIFolder;
+	
 	public Config()
 	{
 		file = new File("server.conf");
@@ -98,6 +100,11 @@ public class Config
 			this.dbDatabase = value;
 			System.out.println("Using: " + dbDatabase + " as database");
 		}
+		if(key.equals("webui-folder"))
+		{
+			this.webUIFolder = value;
+			System.out.println("Using: " + webUIFolder + " as folder to store config for WebUI in");
+		}
 	}
 	private void save()
 	{
@@ -112,6 +119,7 @@ public class Config
 			pw.println("db-user=" + dbUser);
 			pw.println("db-password=" + dbPassword);
 			pw.println("db-database=" + dbDatabase);
+			pw.println("webui-folder=" + webUIFolder);
 			pw.close();
 		}
 		catch (IOException e)
@@ -158,5 +166,10 @@ public class Config
 	public String getDBDatabase()
 	{
 		return this.dbDatabase;
+	}
+	
+	public String getWebUIFolder()
+	{
+		return webUIFolder;
 	}
 }

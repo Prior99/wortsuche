@@ -1,5 +1,6 @@
 package org.cronosx.wortsuche;
 
+import java.io.*;
 import java.security.*;
 import java.util.*;
 
@@ -12,8 +13,13 @@ public class ServerWortsuche
 	private MessageDigest sha1;
 	private WelcomeSocket ws;
 	
+	private boolean okay;
+	
 	public ServerWortsuche()
 	{
+		okay = true;
+		this.config = new Config();
+		if(!exportPortFile()) okay = false;
 		try
 		{
 			sha1 = MessageDigest.getInstance("SHA-1");
@@ -21,13 +27,56 @@ public class ServerWortsuche
 		catch(NoSuchAlgorithmException e)
 		{
 			System.out.println("No algorithm for SHA-1");
-			e.printStackTrace();
+			okay = false;
 		}
-		this.config = new Config();
-		this.users = new Usermanager(this);
-		this.game = new Game(this);
-		this.ws = new WelcomeSocket(config.getPort(), this.game);
-		dbConn = new DatabaseConnection(config.getDBServer(), config.getDBUser(), config.getDBPassword(), config.getDBDatabase());
+		if(okay)
+		{
+			this.users = new Usermanager(this);
+			this.game = new Game(this);
+			this.ws = new WelcomeSocket(config.getPort(), this.game);
+			this.dbConn = new DatabaseConnection(config.getDBServer(), config.getDBUser(), config.getDBPassword(), config.getDBDatabase());
+		}
+		else
+		{
+			this.users = null;
+			this.game = null;
+			this.ws = null;	
+			this.dbConn = null;
+		}
+	}
+	
+	public boolean isOkay()
+	{
+		return okay;
+	}
+	
+	private boolean exportPortFile()
+	{
+		File f = new File(config.getWebUIFolder() + File.separatorChar + "port.conf");
+		if(!f.isDirectory())
+		{
+			try
+			{
+				PrintWriter pw = new PrintWriter(f);
+				pw.println("# This is an autogenertaed configfile");
+				pw.println("# It is used by the webui to determine the port the server is running on");
+				pw.println("# Do not change the content of this file or the webinterface wont be able to connect");
+				pw.println("# File will be overwritten at each start of the server");
+				pw.println(config.getPort());
+				pw.close();
+				return true;
+			}
+			catch(FileNotFoundException e)
+			{
+				System.out.println("\"" + f.getName() + "\" is not writable!");
+				return false;
+			}
+		}
+		else
+		{
+			System.out.println("\"" + f.getName() + "\" is a Directory. Please set it to /path/to/webinterface/");
+			return false;
+		}
 	}
 	
 	public Config getConfig()
@@ -98,6 +147,11 @@ public class ServerWortsuche
 	public static void main(String[] args)
 	{
 		final ServerWortsuche server = new ServerWortsuche();
+		if(!server.isOkay())
+		{
+			System.out.println("Something went wrong! Exitting...");
+			return;
+		}
 		final Thread t = new Thread()
 		{
 			public void run()
