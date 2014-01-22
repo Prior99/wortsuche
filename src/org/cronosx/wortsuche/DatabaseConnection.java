@@ -9,15 +9,22 @@ public class DatabaseConnection
 	private String user;
 	private String password;
 	private String database;
+	private boolean okay;
 	
 	public DatabaseConnection(String server, String user, String password, String database)
 	{
+		okay = true;
 		this.server = server;
 		this.user = user;
 		this.password = password;
 		this.database = database;
 		connect();
-		createDatabase();
+		if(isOkay())createDatabase();
+	}
+	
+	public boolean isOkay()
+	{
+		return okay;
 	}
 	
 	private void connect()
@@ -29,7 +36,7 @@ public class DatabaseConnection
 		catch(SQLException e)
 		{
 			System.out.println("Unable to connect to database");
-			e.printStackTrace();
+			okay = false;
 		}
 	}
 	

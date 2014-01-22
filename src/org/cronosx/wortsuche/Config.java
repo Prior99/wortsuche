@@ -6,17 +6,17 @@ public class Config
 {
 	private File file;
 	
-	private int port;
-	private int score;
-	private int gameTime;
-	private int exportTimeout;
+	private int port = 0;
+	private int score = 5;
+	private int gameTime = 60 * 60 * 12;
+	private int exportTimeout = 60;
 	
-	private String dbServer;
-	private String dbUser;
-	private String dbPassword;
-	private String dbDatabase;
+	private String dbServer = "localhost";
+	private String dbUser = "root";
+	private String dbPassword = "1234";
+	private String dbDatabase = "wortsuche";
 	
-	private String webUIFolder;
+	private String webUIFolder = "/path/to/folder/";
 	
 	public Config()
 	{
@@ -73,7 +73,7 @@ public class Config
 		if(key.equals("game-time"))
 		{
 			this.gameTime = Integer.parseInt(value);
-			System.out.println("Using score: " + gameTime);
+			System.out.println("Using game-time: " + gameTime);
 		}
 		if(key.equals("export-timeout"))
 		{
@@ -111,15 +111,27 @@ public class Config
 		try
 		{
 			PrintWriter pw = new PrintWriter(new FileWriter(file));
+			pw.println("#### General config");
+			pw.println("# A free and public reachable port the clients will connect to. Will be set automaticly in client");
 			pw.println("port=" + port);
+			pw.println("# Basescore the users will get. The higher it is the higher the scores of the users will be");
 			pw.println("score=" + score);
+			pw.println("# The time one game lasts in seconds");
 			pw.println("game-time=" + gameTime);
+			pw.println("# Time between exports to the database in seconds");
 			pw.println("export-timeout=" + exportTimeout);
-			pw.println("db-server=" + dbServer);
-			pw.println("db-user=" + dbUser);
-			pw.println("db-password=" + dbPassword);
-			pw.println("db-database=" + dbDatabase);
+			pw.println("# WebUI-Folder, the folder where the webui is hosted from");
 			pw.println("webui-folder=" + webUIFolder);
+			pw.println("");
+			pw.println("#### Databaseconfiguration");
+			pw.println("# Server the database is on (localhost, most likely)");
+			pw.println("db-server=" + dbServer);
+			pw.println("# User to connect to server with");
+			pw.println("db-user=" + dbUser);
+			pw.println("# Password to connect to server with");
+			pw.println("db-password=" + dbPassword);
+			pw.println("# Database to use on the server");
+			pw.println("db-database=" + dbDatabase);
 			pw.close();
 		}
 		catch (IOException e)

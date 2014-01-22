@@ -19,6 +19,11 @@ public class ServerWortsuche
 	{
 		okay = true;
 		this.config = new Config();
+		if(config.getPort() == 0)
+		{
+			System.out.println("0 is not a valid port!");
+			okay = false;
+		}
 		if(!exportPortFile()) okay = false;
 		try
 		{
@@ -29,19 +34,18 @@ public class ServerWortsuche
 			System.out.println("No algorithm for SHA-1");
 			okay = false;
 		}
-		if(okay)
+		this.dbConn = new DatabaseConnection(config.getDBServer(), config.getDBUser(), config.getDBPassword(), config.getDBDatabase());
+		if(okay && this.dbConn.isOkay())
 		{
 			this.users = new Usermanager(this);
 			this.game = new Game(this);
 			this.ws = new WelcomeSocket(config.getPort(), this.game);
-			this.dbConn = new DatabaseConnection(config.getDBServer(), config.getDBUser(), config.getDBPassword(), config.getDBDatabase());
 		}
 		else
 		{
 			this.users = null;
 			this.game = null;
 			this.ws = null;	
-			this.dbConn = null;
 		}
 	}
 	
@@ -160,7 +164,7 @@ public class ServerWortsuche
 				{
 					try
 					{
-						Thread.sleep(server.getConfig().getExportTimeout());
+						Thread.sleep(server.getConfig().getExportTimeout() * 1000);
 					}
 					catch(InterruptedException e)
 					{
@@ -186,17 +190,6 @@ public class ServerWortsuche
 				Scanner sc = new Scanner(System.in);
 				while(!isInterrupted())
 				{
-					while(!sc.hasNextLine())
-					{
-						try
-						{
-							Thread.sleep(200);
-						}
-						catch(InterruptedException e)
-						{
-							e.printStackTrace();
-						}
-					}
 					String s = sc.nextLine();
 					String[] args = s.split(" ");
 					System.out.println("Running command \""+s+"\"");

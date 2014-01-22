@@ -233,7 +233,7 @@ public class Game
 	
 	public int getRuntime()
 	{
-		return server.getConfig().getGameTime();
+            return server.getConfig().getGameTime();
 	}
 	
 	public int getDictonarySize()
