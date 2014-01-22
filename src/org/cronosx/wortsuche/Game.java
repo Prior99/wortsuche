@@ -1,15 +1,10 @@
 package org.cronosx.wortsuche;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.util.concurrent.locks.*;
+import java.util.logging.*;
 
 import org.cronosx.tools.LimitedQueue;
 
@@ -321,20 +316,24 @@ public class Game
 			dataLock.lock();
 			try
 			{
-				Scanner sc = new Scanner(new File("dictonary.txt"));
-				while(sc.hasNextLine())
+				BufferedReader rd = new BufferedReader(new FileReader(new File("dictonary.txt")));
+				String s;
+				while((s = rd.readLine()) != null)
 				{
-					String s = sc.nextLine();
 					if(s.length() > this.maxWordLen) this.maxWordLen = s.length();
 					if(!dict.containsKey(s.length())) dict.put(s.length(), new ArrayList<String>());
 					dict.get(s.length()).add(s);
 					this.dictSize++;
 				}
-				sc.close();
+				rd.close();
 			}
 			catch(FileNotFoundException e)
 			{
-				e.printStackTrace();
+				System.out.println("WARNING! dictonary.txt not found. unable to generate game!");
+			}
+			catch (IOException ex)
+			{
+				ex.printStackTrace();
 			}
 
 			for(int i:dict.keySet())

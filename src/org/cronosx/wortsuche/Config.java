@@ -78,7 +78,7 @@ public class Config
 		if(key.equals("export-timeout"))
 		{
 			this.exportTimeout = Integer.parseInt(value);
-			System.out.println("Using: " + exportTimeout + "ms as timeout for export");
+			System.out.println("Using: " + exportTimeout + "s as timeout for export");
 		}
 		if(key.equals("db-server"))
 		{
