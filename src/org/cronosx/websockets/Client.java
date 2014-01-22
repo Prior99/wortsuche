@@ -102,7 +102,7 @@ public class Client implements WebSocketListener
 		obj.put("requestID", request);
 		responses.put(currentID, handler);
 		if(!closed && okay)
-			s.send(obj.toString());
+			s.send(escape(obj.toString()));
 		currentID++;
 	}
 	
@@ -116,7 +116,7 @@ public class Client implements WebSocketListener
 	{
 		try
 		{
-			JSONObject jObj = new JSONObject(string);
+			JSONObject jObj = new JSONObject(unescape(string));
 			process(jObj);
 		}
 		catch(JSONException e)
@@ -156,6 +156,20 @@ public class Client implements WebSocketListener
 		for(CloseHandler h : closeHandlers)
 			h.onClose();
 		shutdown();
+	}
+	
+	public String escape(String s)
+	{
+		return s.replace("Ä", "&Auml;").replace("ä", "&auml;")
+				.replace("Ö", "&Ouml;").replace("ö", "&ouml;")
+				.replace("Ü", "&Uuml;").replace("ü", "&uuml;");
+	}
+	
+	public String unescape(String s)
+	{
+		return s.replace("&Auml;", "Ä").replace("&auml;", "ä")
+				.replace("&Ouml;", "Ö").replace("&ouml;", "ö")
+				.replace("&Uuml;", "Ü").replace("&uuml;", "ü");
 	}
 	
 }

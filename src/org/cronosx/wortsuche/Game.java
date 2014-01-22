@@ -316,8 +316,10 @@ public class Game
 			dataLock.lock();
 			try
 			{
-				BufferedReader rd = new BufferedReader(new FileReader(new File("dictonary.txt")));
+				InputStreamReader r = new InputStreamReader(new FileInputStream(new File("dictonary.txt")), "UTF-8");
 				String s;
+				System.out.println("Reading dictonary.txt as " + r.getEncoding());
+				BufferedReader rd = new BufferedReader(r);
 				while((s = rd.readLine()) != null)
 				{
 					if(s.length() > this.maxWordLen) this.maxWordLen = s.length();
