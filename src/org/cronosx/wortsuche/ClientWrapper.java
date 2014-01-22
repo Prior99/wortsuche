@@ -104,7 +104,10 @@ public class ClientWrapper
 			{
 				user.clientDisconnected();
 				if(!user.isLoggedIn())
+				{
 					server.getGame().leave(user);
+					server.getUserManager().removeCachedUser(user);
+				}
 			}
 		});
 		final ClientWrapper self = this;

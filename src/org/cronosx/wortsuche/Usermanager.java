@@ -6,14 +6,17 @@ import java.util.ArrayList;
 
 import java.sql.PreparedStatement;
 import java.util.*;
+import java.util.concurrent.locks.*;
 
 public class Usermanager
 {
 	private ServerWortsuche	server;
 	private List<User>	users;
+	private ReentrantLock mutex;
 	
 	public Usermanager(ServerWortsuche server)
 	{
+		mutex = new ReentrantLock();
 		users = new ArrayList<>();
 		this.server = server;
 	}
@@ -25,19 +28,28 @@ public class Usermanager
 	
 	public User getUser(String username)
 	{
-		User user = getLoadedUser(username);
-		if(user == null)
+		User user;
+		try
 		{
-			try
+			mutex.lock();
+			user = getLoadedUser(username);
+			if(user == null)
 			{
-				user = new User(username, server);
+				try
+				{
+					user = new User(username, server);
+				}
+				catch(SQLException e)
+				{
+					e.printStackTrace();
+					return null;
+				}
+				addLoadedUser(user);
 			}
-			catch(SQLException e)
-			{
-				e.printStackTrace();
-				return null;
-			}
-			addLoadedUser(user);
+		}
+		finally
+		{
+			mutex.unlock();
 		}
 		return user;
 	}
@@ -114,19 +126,43 @@ public class Usermanager
 	
 	private void addLoadedUser(User user)
 	{
-		users.add(user);
+		try
+		{
+			mutex.lock();
+			users.add(user);
+		}
+		finally
+		{
+			mutex.unlock();
+		}
 	}
 	
 	public void removeCachedUser(User user)
 	{
-		users.remove(user);
+		try
+		{
+			mutex.lock();
+			users.remove(user);
+		}
+		finally
+		{
+			mutex.unlock();
+		}
 	}
 	
 	public void save() throws SQLException
 	{
-		for(User user : users)
+		try
 		{
-			user.exportToDB();
+			mutex.lock();
+			for(User user : users)
+			{
+				user.exportToDB();
+			}
+		}
+		finally
+		{
+			mutex.unlock();
 		}
 	}
 }
