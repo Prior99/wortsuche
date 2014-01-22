@@ -69,14 +69,14 @@ public class ClientWrapper
 				JSONObject answer = new JSONObject();
 				try
 				{
-					PreparedStatement stmt = server.getDatabase().getPreparedStatement("SELECT user.Rank, Username, Score FROM `UserRanks` ORDER BY Score DESC LIMIT 7");
+					PreparedStatement stmt = server.getDatabase().getPreparedStatement("SELECT Rank, Username, Score FROM `UserRanks` ORDER BY Score DESC LIMIT 7");
 					ResultSet rs = stmt.executeQuery();
 					while(rs.next())
 					{
 						JSONObject jUser = new JSONObject();
 						jUser.put("username", rs.getString("Username"));
 						jUser.put("score", rs.getString("Score"));
-						jUser.put("rank", rs.getString("user.Rank"));
+						jUser.put("rank", rs.getString("Rank"));
 						answer.append("top", jUser);
 					}
 					stmt.close();
