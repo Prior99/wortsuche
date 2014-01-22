@@ -42,7 +42,10 @@ public class ServerWortsuche
 	
 	public void shutdown()
 	{
-		
+		System.out.println("Shutting down...");
+		game.shutdown();
+		ws.shutdown();
+		dbConn.shutdown();
 	}
 	
 	public Game getGame()
@@ -94,6 +97,7 @@ public class ServerWortsuche
 	
 	public static void main(String[] args)
 	{
+		System.out.println("MACH MICH THREADSAFE");
 		final ServerWortsuche server = new ServerWortsuche();
 		final Thread t = new Thread()
 		{
@@ -107,7 +111,7 @@ public class ServerWortsuche
 					}
 					catch(InterruptedException e)
 					{
-						e.printStackTrace();
+						return;
 					}
 					server.save();	
 				}

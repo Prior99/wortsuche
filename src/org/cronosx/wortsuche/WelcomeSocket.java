@@ -7,7 +7,7 @@ public class WelcomeSocket extends Thread
 {
 	private ServerSocket socket;
 	private final Game game;
-	
+	private boolean closed;
 	public WelcomeSocket(int port, Game g)
 	{
 		this.game = g;
@@ -35,9 +35,24 @@ public class WelcomeSocket extends Thread
 			}
 			catch(IOException e)
 			{
-				e.printStackTrace();
+				if(!closed)
+					e.printStackTrace();
 			}
 			
 		}
+	}
+	
+	public void shutdown()
+	{
+		closed = true;
+		try
+		{
+			socket.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		interrupt();
 	}
 }

@@ -90,6 +90,11 @@ public class ClientWrapper
 		});
 	}
 	
+	public void shutdown()
+	{
+		client.shutdown();
+	}
+	
 	private void registerUserHandlers()
 	{
 		client.addCloseHandler(new CloseHandler()

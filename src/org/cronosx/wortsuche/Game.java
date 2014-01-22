@@ -29,7 +29,7 @@ public class Game
 	private int started = 0;
 	private Thread timer;
 	private final LimitedQueue<Message> chatBuffer;
-	
+		
 	public Game(ServerWortsuche server)
 	{
 		chatBuffer = new LimitedQueue<>(64);
@@ -162,12 +162,19 @@ public class Game
 				}
 				catch (InterruptedException e)
 				{
-					e.printStackTrace();
+					return;
 				}
 				self.generateGame();
 			}
 		};
 		timer.start();
+	}
+	
+	public void shutdown()
+	{
+		for(ClientWrapper cw : clients)
+			cw.shutdown();
+		timer.interrupt();
 	}
 	
 	public int getRuntime()
@@ -470,12 +477,13 @@ public class Game
 						}
 						catch (InterruptedException e)
 						{
-							e.printStackTrace();
+							return;
 						}
 						self.generateGame();
 					}
 				};
 				timer.start();
+				System.out.println("Done!");
 			}
 			catch(IOException e)
 			{

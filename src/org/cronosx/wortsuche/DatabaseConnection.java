@@ -33,6 +33,18 @@ public class DatabaseConnection
 		}
 	}
 	
+	public void shutdown()
+	{
+		try
+		{
+			connection.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
 	public PreparedStatement getPreparedStatement(String s)
 	{
 		PreparedStatement stmt;
